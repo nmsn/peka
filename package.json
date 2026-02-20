@@ -1,0 +1,17 @@
+{
+  "name": "peka",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Peka monorepo",
+  "scripts": {
+    "dev": "pnpm --filter @peka/electron dev",
+    "build": "pnpm --filter @peka/electron build",
+    "start": "pnpm --filter @peka/electron start"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "esbuild"
+    ]
+  }
+}
