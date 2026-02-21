@@ -121,110 +121,154 @@ export function ColorDisplay(): React.ReactNode {
 
   return (
     <div className="color-display">
-      <div className="color-section">
-        <div className="color-header">
-          <span className="color-label">Foreground</span>
-          <div className="color-actions">
-            <button
-              className={`pick-btn ${isPicking === 'foreground' ? 'picking' : ''}`}
-              onClick={() => handlePickColor('foreground')}
-              title="Pick color (⌘D)"
-            >
-              🎨
-            </button>
-            <button
-              className="color-input-btn"
-              onClick={() => handlePickColorInput('foreground')}
-              title="Color picker"
-            >
-              📱
-            </button>
-          </div>
-        </div>
+      <div className="color-pair-row">
         <div
-          className="color-preview"
+          className="color-section color-tile"
           style={{ backgroundColor: foreground }}
           onClick={() => handlePickColorInput('foreground')}
-        />
-        <div className="color-info">
-          <span className="color-value">{formattedForeground || foreground}</span>
-          <button
-            className={`copy-btn ${copied === 'foreground' ? 'copied' : ''}`}
-            onClick={() => handleCopy('foreground')}
-            title="Copy (⌘C)"
-          >
-            {copied === 'foreground' ? 'Copied!' : 'Copy'}
-          </button>
-        </div>
-      </div>
-
-      <div className="color-section">
-        <div className="color-header">
-          <span className="color-label">Background</span>
-          <div className="color-actions">
-            <button
-              className={`pick-btn ${isPicking === 'background' ? 'picking' : ''}`}
-              onClick={() => handlePickColor('background')}
-              title="Pick color (⌘⇧D)"
-            >
-              🎨
-            </button>
-            <button
-              className="color-input-btn"
-              onClick={() => handlePickColorInput('background')}
-              title="Color picker"
-            >
-              📱
-            </button>
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handlePickColorInput('foreground')
+            }
+          }}
+        >
+          <div className="color-tile-overlay">
+            <div className="color-header">
+              <span className="color-label">Foreground</span>
+              <div className="color-actions">
+                <button
+                  className={`pick-btn hover-reveal ${isPicking === 'foreground' ? 'picking' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    void handlePickColor('foreground')
+                  }}
+                  title="Pick color (⌘D)"
+                  aria-label="Pick foreground color"
+                >
+                  🎨
+                </button>
+                <button
+                  className="color-input-btn hover-reveal"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handlePickColorInput('foreground')
+                  }}
+                  title="Color picker"
+                  aria-label="Open foreground color picker"
+                >
+                  📱
+                </button>
+              </div>
+            </div>
+            <div className="color-info">
+              <span className="color-value">{formattedForeground || foreground}</span>
+              <button
+                className={`copy-btn hover-reveal ${copied === 'foreground' ? 'copied' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  void handleCopy('foreground')
+                }}
+                title="Copy (⌘C)"
+              >
+                {copied === 'foreground' ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
           </div>
         </div>
+
         <div
-          className="color-preview"
+          className="color-section color-tile"
           style={{ backgroundColor: background }}
           onClick={() => handlePickColorInput('background')}
-        />
-        <div className="color-info">
-          <span className="color-value">{formattedBackground || background}</span>
-          <button
-            className={`copy-btn ${copied === 'background' ? 'copied' : ''}`}
-            onClick={() => handleCopy('background')}
-            title="Copy (⌘⇧C)"
-          >
-            {copied === 'background' ? 'Copied!' : 'Copy'}
-          </button>
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handlePickColorInput('background')
+            }
+          }}
+        >
+          <div className="color-tile-overlay">
+            <div className="color-header">
+              <span className="color-label">Background</span>
+              <div className="color-actions">
+                <button
+                  className={`pick-btn hover-reveal ${isPicking === 'background' ? 'picking' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    void handlePickColor('background')
+                  }}
+                  title="Pick color (⌘⇧D)"
+                  aria-label="Pick background color"
+                >
+                  🎨
+                </button>
+                <button
+                  className="color-input-btn hover-reveal"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handlePickColorInput('background')
+                  }}
+                  title="Color picker"
+                  aria-label="Open background color picker"
+                >
+                  📱
+                </button>
+              </div>
+            </div>
+            <div className="color-info">
+              <span className="color-value">{formattedBackground || background}</span>
+              <button
+                className={`copy-btn hover-reveal ${copied === 'background' ? 'copied' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  void handleCopy('background')
+                }}
+                title="Copy (⌘⇧C)"
+              >
+                {copied === 'background' ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)">
-        ⇄
-      </button>
+      <div className="color-meta-row">
+        <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)">
+          ⇄
+        </button>
 
-      <div className="format-selector">
-        <span className="format-label">Format:</span>
-        <select
-          value={colorFormat}
-          onChange={(e) => setColorFormat(e.target.value as ColorFormat)}
-        >
-          {COLOR_FORMATS.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.label}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="format-selector">
+          <span className="format-label">Format:</span>
+          <select
+            value={colorFormat}
+            onChange={(e) => setColorFormat(e.target.value as ColorFormat)}
+          >
+            {COLOR_FORMATS.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div className="format-selector">
-        <span className="format-label">Copy:</span>
-        <select
-          value={copyFormat}
-          onChange={(e) => setCopyFormat(e.target.value as CopyFormat)}
-        >
-          {COPY_FORMATS.map((f) => (
-            <option key={f.value} value={f.value}>
-              {f.label}
-            </option>
-          ))}
-        </select>
+        <div className="format-selector">
+          <span className="format-label">Copy:</span>
+          <select
+            value={copyFormat}
+            onChange={(e) => setCopyFormat(e.target.value as CopyFormat)}
+          >
+            {COPY_FORMATS.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   )

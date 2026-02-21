@@ -105,8 +105,12 @@ function App(): ReactNode {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Pika</h1>
-        <button className="settings-btn" onClick={() => setShowPreferences(true)}>
+        <h1 className="app-title">Pika</h1>
+        <button
+          className="settings-btn"
+          onClick={() => setShowPreferences(true)}
+          aria-label="Open settings"
+        >
           ⚙
         </button>
       </header>

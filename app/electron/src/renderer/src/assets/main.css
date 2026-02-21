@@ -27,18 +27,19 @@ body {
 
 .app-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12px;
   padding-bottom: 16px;
   border-bottom: 1px solid #333;
 }
 
-.app-header h1 {
+.app-title {
   font-size: 24px;
   font-weight: 600;
 }
 
 .settings-btn {
+  margin-left: auto;
   background: none;
   border: none;
   font-size: 20px;
@@ -76,30 +77,98 @@ body {
   gap: 16px;
 }
 
+.color-pair-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
 .color-section {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+.color-tile {
+  position: relative;
+  height: 152px;
+  border-radius: 14px;
+  border: 2px solid #333;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.color-tile:hover,
+.color-tile:focus-within {
+  border-color: #5c5c5c;
+}
+
+.color-tile-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.18) 48%, rgba(0, 0, 0, 0.52) 100%);
+}
+
+.color-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 8px;
+}
+
+.color-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pick-btn,
+.color-input-btn {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  background-color: #303030;
+  color: #fff;
+  cursor: pointer;
+}
+
+.pick-btn.picking {
+  border-color: #4a90d9;
+}
+
+.hover-reveal {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(2px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.color-tile:hover .hover-reveal,
+.color-tile:focus-within .hover-reveal {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.color-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .color-label {
   font-size: 12px;
-  color: #888;
+  color: rgba(255, 255, 255, 0.88);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.color-preview {
-  width: 100%;
-  height: 80px;
-  border-radius: 12px;
-  cursor: pointer;
-  border: 2px solid #333;
-  transition: border-color 0.2s;
-}
-
-.color-preview:hover {
-  border-color: #555;
+  font-weight: 600;
 }
 
 .color-info {
@@ -110,11 +179,18 @@ body {
 
 .color-value {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  font-size: 14px;
+  font-size: 15px;
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 8px;
 }
 
 .copy-btn {
-  background-color: #333;
+  background-color: rgba(23, 23, 23, 0.84);
   border: none;
   color: #fff;
   padding: 6px 12px;
@@ -133,7 +209,6 @@ body {
 }
 
 .swap-btn {
-  align-self: center;
   background-color: #333;
   border: none;
   color: #fff;
@@ -153,6 +228,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 180px;
 }
 
 .format-label {
@@ -174,18 +251,18 @@ body {
 .accessibility-panel {
   background-color: #252525;
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
 }
 
 .panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .panel-header h3 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -201,10 +278,10 @@ body {
   background: none;
   border: none;
   color: #888;
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   transition: all 0.2s;
 }
 
@@ -216,33 +293,37 @@ body {
 .color-preview-bar {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .preview-sample {
   flex: 1;
-  height: 48px;
+  height: 36px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
 }
 
 .contrast-ratio {
-  text-align: center;
-  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
 .ratio-value {
-  font-size: 48px;
+  font-size: 30px;
   font-weight: 700;
   color: #4a90d9;
+  line-height: 1;
 }
 
 .ratio-label {
-  font-size: 24px;
+  font-size: 14px;
   color: #888;
 }
 
@@ -250,28 +331,45 @@ body {
 .apca-results {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+}
+
+.wcag-levels,
+.apca-levels {
+  display: grid;
+  gap: 6px;
+}
+
+.wcag-levels {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.apca-levels {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .wcag-item,
 .apca-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 8px 12px;
+  gap: 2px;
+  min-height: 48px;
+  padding: 6px 8px;
   background-color: #333;
   border-radius: 8px;
 }
 
 .wcag-badge,
 .apca-badge {
-  font-size: 12px;
+  font-size: 11px;
   color: #888;
 }
 
 .wcag-status,
 .apca-status {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -289,5 +387,17 @@ body {
 .no-result {
   text-align: center;
   color: #888;
-  padding: 20px;
+  padding: 12px;
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .color-pair-row {
+    grid-template-columns: 1fr;
+  }
+
+  .wcag-levels,
+  .apca-levels {
+    grid-template-columns: 1fr;
+  }
 }
