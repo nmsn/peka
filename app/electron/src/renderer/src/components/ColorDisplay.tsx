@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useColorStore } from '../stores/colorStore'
-import type { ColorFormat, CopyFormat } from '../types'
 
 declare global {
   interface EyeDropper {
@@ -11,22 +10,6 @@ declare global {
   }
 }
 
-const COLOR_FORMATS: { value: ColorFormat; label: string }[] = [
-  { value: 'hex', label: 'Hex' },
-  { value: 'rgb', label: 'RGB' },
-  { value: 'hsb', label: 'HSB' },
-  { value: 'hsl', label: 'HSL' },
-  { value: 'lab', label: 'LAB' },
-  { value: 'opengl', label: 'OpenGL' }
-]
-
-const COPY_FORMATS: { value: CopyFormat; label: string }[] = [
-  { value: 'css', label: 'CSS' },
-  { value: 'design', label: 'Design' },
-  { value: 'swiftui', label: 'SwiftUI' },
-  { value: 'unformatted', label: 'Unformatted' }
-]
-
 export function ColorDisplay(): React.ReactNode {
   const {
     foreground,
@@ -35,9 +18,7 @@ export function ColorDisplay(): React.ReactNode {
     copyFormat,
     setForeground,
     setBackground,
-    swapColors,
-    setColorFormat,
-    setCopyFormat
+    swapColors
   } = useColorStore()
 
   const [formattedForeground, setFormattedForeground] = useState('')
@@ -241,34 +222,6 @@ export function ColorDisplay(): React.ReactNode {
         <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)">
           ⇄
         </button>
-
-        <div className="format-selector">
-          <span className="format-label">Format:</span>
-          <select
-            value={colorFormat}
-            onChange={(e) => setColorFormat(e.target.value as ColorFormat)}
-          >
-            {COLOR_FORMATS.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="format-selector">
-          <span className="format-label">Copy:</span>
-          <select
-            value={copyFormat}
-            onChange={(e) => setCopyFormat(e.target.value as CopyFormat)}
-          >
-            {COPY_FORMATS.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-        </div>
       </div>
     </div>
   )

@@ -110,6 +110,34 @@ export const registerIpcHandlers = (): void => {
     return color
   })
 
+  ipcMain.handle('window-minimize', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    window?.minimize()
+    return true
+  })
+
+  ipcMain.handle('window-toggle-maximize', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    if (!window) return false
+    if (window.isMaximized()) {
+      window.unmaximize()
+    } else {
+      window.maximize()
+    }
+    return true
+  })
+
+  ipcMain.handle('window-close', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    window?.close()
+    return true
+  })
+
+  ipcMain.handle('window-is-maximized', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    return window?.isMaximized() ?? false
+  })
+
   log.info('IPC handlers registered')
 }
 

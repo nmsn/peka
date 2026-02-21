@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { useColorStore } from './stores/colorStore'
 import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
+import { TitleBar } from './components/TitleBar'
 import './assets/main.css'
 
 import type { ReactNode } from 'react'
@@ -104,16 +105,7 @@ function App(): ReactNode {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1 className="app-title">Pika</h1>
-        <button
-          className="settings-btn"
-          onClick={() => setShowPreferences(true)}
-          aria-label="Open settings"
-        >
-          ⚙
-        </button>
-      </header>
+      <TitleBar onOpenSettings={() => setShowPreferences(true)} />
       <main className="app-main">
         <ColorDisplay />
         <AccessibilityPanel />

@@ -69,6 +69,11 @@ export interface PikaAPI {
   onUndo: (callback: () => void) => void
   onRedo: (callback: () => void) => void
   onPreferences: (callback: () => void) => void
+  minimizeWindow: () => Promise<boolean>
+  toggleMaximizeWindow: () => Promise<boolean>
+  closeWindow: () => Promise<boolean>
+  isWindowMaximized: () => Promise<boolean>
+  onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
 }
 
 declare global {
@@ -132,6 +137,13 @@ const api: PikaAPI = {
   },
   onPreferences: (callback: () => void): void => {
     ipcRenderer.on('shortcut:preferences', callback)
+  },
+  minimizeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-minimize'),
+  toggleMaximizeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-toggle-maximize'),
+  closeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-close'),
+  isWindowMaximized: (): Promise<boolean> => ipcRenderer.invoke('window-is-maximized'),
+  onWindowMaximizedChange: (callback: (maximized: boolean) => void): void => {
+    ipcRenderer.on('window:maximized', (_event, maximized) => callback(Boolean(maximized)))
   }
 }
 

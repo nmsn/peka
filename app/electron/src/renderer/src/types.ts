@@ -67,6 +67,11 @@ export interface PikaAPI {
   onUndo: (callback: () => void) => void
   onRedo: (callback: () => void) => void
   onPreferences: (callback: () => void) => void
+  minimizeWindow: () => Promise<boolean>
+  toggleMaximizeWindow: () => Promise<boolean>
+  closeWindow: () => Promise<boolean>
+  isWindowMaximized: () => Promise<boolean>
+  onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
 }
 
 declare global {

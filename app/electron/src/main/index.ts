@@ -23,7 +23,9 @@ function createWindow(): void {
     minWidth: 280,
     minHeight: 400,
     show: false,
-    frame: true,
+    frame: false,
+    title: 'Peka',
+    titleBarStyle: 'hidden',
     resizable: true,
     alwaysOnTop: getSettings().appFloating,
     skipTaskbar: getSettings().appMode === 'menubar',
@@ -52,6 +54,14 @@ function createWindow(): void {
     mainWindow = null
     colorPicker?.destroy()
     colorPicker = null
+  })
+
+  mainWindow.on('maximize', () => {
+    mainWindow?.webContents.send('window:maximized', true)
+  })
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow?.webContents.send('window:maximized', false)
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
