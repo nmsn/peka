@@ -1,34 +1,124 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { useEffect, useCallback } from 'react'
+import { useColorStore } from './stores/colorStore'
+import { ColorDisplay } from './components/ColorDisplay'
+import { AccessibilityPanel } from './components/AccessibilityPanel'
+import './assets/main.css'
 
-function App(): React.JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+import type { ReactNode } from 'react'
+
+declare global {
+  interface EyeDropper {
+    open: () => Promise<{ sRGBHex: string }>
+  }
+  interface Window {
+    EyeDropper: new () => EyeDropper
+  }
+}
+
+function App(): ReactNode {
+  const { 
+    loadSettings, 
+    undo, 
+    redo, 
+    swapColors, 
+    setColorFormat, 
+    setShowPreferences,
+    setForeground,
+    setBackground,
+    setPickerActive
+  } = useColorStore()
+
+  const pickColor = useCallback(async (target: 'foreground' | 'background'): Promise<void> => {
+    if (!window.EyeDropper) {
+      console.error('EyeDropper API not supported')
+      return
+    }
+
+    setPickerActive(true, target)
+    try {
+      const eyeDropper = new window.EyeDropper()
+      const result = await eyeDropper.open()
+      const color = result.sRGBHex
+
+      if (color) {
+        if (target === 'foreground') {
+          setForeground(color)
+          await window.api.setForegroundColor(color)
+        } else {
+          setBackground(color)
+          await window.api.setBackgroundColor(color)
+        }
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        console.error('Failed to pick color:', error)
+      }
+    } finally {
+      setPickerActive(false)
+    }
+  }, [setForeground, setBackground, setPickerActive])
+
+  useEffect(() => {
+    const init = async (): Promise<void> => {
+      const settings = await window.api.getSettings()
+      loadSettings(settings)
+    }
+    init()
+
+    window.api.onPickForeground(() => {
+      pickColor('foreground')
+    })
+
+    window.api.onPickBackground(() => {
+      pickColor('background')
+    })
+
+    window.api.onFormatChange((format) => {
+      setColorFormat(format as Parameters<typeof setColorFormat>[0])
+    })
+
+    window.api.onCopy(() => {
+      console.log('Copy foreground')
+    })
+
+    window.api.onCopyBackground(() => {
+      console.log('Copy background')
+    })
+
+    window.api.onSwap(() => {
+      swapColors()
+    })
+
+    window.api.onUndo(() => {
+      undo()
+    })
+
+    window.api.onRedo(() => {
+      redo()
+    })
+
+    window.api.onPreferences(() => {
+      setShowPreferences(true)
+    })
+  }, [loadSettings, undo, redo, swapColors, setColorFormat, setShowPreferences, pickColor])
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <div className="app">
+      <header className="app-header">
+        <h1>Pika</h1>
+        <button className="settings-btn" onClick={() => setShowPreferences(true)}>
+          ⚙
+        </button>
+      </header>
+      <main className="app-main">
+        <ColorDisplay />
+        <AccessibilityPanel />
+      </main>
+      <footer className="app-footer">
+        <span>⌘D Pick Foreground</span>
+        <span>⌘⇧D Pick Background</span>
+      </footer>
+    </div>
   )
 }
 

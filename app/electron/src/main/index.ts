@@ -1,24 +1,57 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, Menu, Tray, nativeImage } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import log from 'electron-log'
 import icon from '../../resources/icon.png?asset'
+import { registerIpcHandlers, registerShortcuts, unregisterShortcuts } from './modules/ipc'
+import { getSettings } from './modules/store'
+import ScreenColorPicker from './modules/eyedropper'
+
+log.initialize()
+log.info('Application starting...')
+
+let mainWindow: BrowserWindow | null = null
+let tray: Tray | null = null
+let colorPicker: ScreenColorPicker | null = null
 
 function createWindow(): void {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+  log.info('Creating main window')
+
+  mainWindow = new BrowserWindow({
+    width: 320,
+    height: 480,
+    minWidth: 280,
+    minHeight: 400,
     show: false,
-    autoHideMenuBar: true,
+    frame: true,
+    resizable: true,
+    alwaysOnTop: getSettings().appFloating,
+    skipTaskbar: getSettings().appMode === 'menubar',
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      contextIsolation: true,
+      nodeIntegration: false
     }
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow?.show()
+    log.info('Main window shown')
+  })
+
+  mainWindow.on('close', (event) => {
+    if (getSettings().appMode === 'menubar' && process.platform === 'darwin') {
+      event.preventDefault()
+      mainWindow?.hide()
+    }
+  })
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+    colorPicker?.destroy()
+    colorPicker = null
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -26,49 +59,114 @@ function createWindow(): void {
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  registerShortcuts(mainWindow)
+  colorPicker = new ScreenColorPicker(mainWindow)
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+function createTray(): void {
+  if (process.platform !== 'darwin') return
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+  try {
+    const trayIcon = nativeImage.createFromPath(icon)
+    tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
+
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Show Pika',
+        click: (): void => {
+          mainWindow?.show()
+        }
+      },
+      {
+        label: 'Pick Foreground Color',
+        accelerator: 'Cmd+D',
+        click: (): void => {
+          mainWindow?.webContents.send('shortcut:pick-foreground')
+        }
+      },
+      {
+        label: 'Pick Background Color',
+        accelerator: 'Cmd+Shift+D',
+        click: (): void => {
+          mainWindow?.webContents.send('shortcut:pick-background')
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Quit',
+        click: (): void => {
+          app.quit()
+        }
+      }
+    ])
+
+    tray.setToolTip('Pika Color Picker')
+    tray.setContextMenu(contextMenu)
+
+    tray.on('click', () => {
+      if (mainWindow?.isVisible()) {
+        mainWindow.hide()
+      } else {
+        mainWindow?.show()
+      }
+    })
+
+    log.info('Tray created')
+  } catch (error) {
+    log.error('Failed to create tray:', error)
+  }
+}
+
+export function getColorPicker(): ScreenColorPicker | null {
+  return colorPicker
+}
+
+app.whenReady().then(() => {
+  log.info('App ready')
+
+  electronApp.setAppUserModelId('com.peka.app')
+
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   createWindow()
+  registerIpcHandlers()
 
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  if (getSettings().appMode === 'menubar') {
+    createTray()
+  }
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    } else {
+      mainWindow?.show()
+    }
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+app.on('will-quit', () => {
+  unregisterShortcuts()
+  log.info('Application quitting')
+})
+
+process.on('uncaughtException', (error) => {
+  log.error('Uncaught exception:', error)
+})
+
+process.on('unhandledRejection', (reason) => {
+  log.error('Unhandled rejection:', reason)
+})
