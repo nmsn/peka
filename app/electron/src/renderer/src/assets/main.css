@@ -138,10 +138,15 @@ body {
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-lg) var(--space-lg);
   overflow: hidden;
+  min-height: 0;
 }
 
 .color-display {
   position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .color-pair-row {
@@ -151,6 +156,8 @@ body {
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+  flex: 1;
+  min-height: 0;
 }
 
 .color-section {
@@ -161,7 +168,8 @@ body {
 
 .color-tile {
   position: relative;
-  min-height: 82px;
+  min-height: 0;
+  height: 100%;
   cursor: pointer;
   overflow: hidden;
   transition: opacity 0.15s ease-in;
@@ -334,6 +342,9 @@ body {
   backdrop-filter: blur(18px);
   padding: 0 var(--space-lg);
   min-height: var(--footer-height);
+  height: var(--footer-height);
+  flex: 0 0 var(--footer-height);
+  margin-top: auto;
   display: flex;
   align-items: center;
 }
@@ -497,7 +508,9 @@ body {
 
   .accessibility-panel {
     padding: 8px 10px;
-    min-height: auto;
+    min-height: var(--footer-height);
+    height: var(--footer-height);
+    flex: 0 0 var(--footer-height);
   }
 
   .contrast-footer-layout {
