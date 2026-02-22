@@ -18,10 +18,8 @@ function createWindow(): void {
   log.info('Creating main window')
 
   mainWindow = new BrowserWindow({
-    width: 320,
-    height: 480,
-    minWidth: 280,
-    minHeight: 400,
+    width: 380,
+    height: 150,
     show: false,
     frame: false,
     title: 'Peka',

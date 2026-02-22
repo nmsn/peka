@@ -110,10 +110,6 @@ function App(): ReactNode {
         <ColorDisplay />
         <AccessibilityPanel />
       </main>
-      <footer className="app-footer">
-        <span>⌘D Pick Foreground</span>
-        <span>⌘⇧D Pick Background</span>
-      </footer>
     </div>
   )
 }

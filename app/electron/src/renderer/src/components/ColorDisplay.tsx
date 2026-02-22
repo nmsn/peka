@@ -23,6 +23,8 @@ export function ColorDisplay(): React.ReactNode {
 
   const [formattedForeground, setFormattedForeground] = useState('')
   const [formattedBackground, setFormattedBackground] = useState('')
+  const [foregroundName, setForegroundName] = useState('Unknown')
+  const [backgroundName, setBackgroundName] = useState('Unknown')
   const [copied, setCopied] = useState<'foreground' | 'background' | null>(null)
   const [isPicking, setIsPicking] = useState<'foreground' | 'background' | null>(null)
 
@@ -30,11 +32,31 @@ export function ColorDisplay(): React.ReactNode {
     const updateFormats = async (): Promise<void> => {
       const fg = await window.api.formatColor(foreground, colorFormat)
       const bg = await window.api.formatColor(background, colorFormat)
+      const fgName = await window.api.getColorName(foreground)
+      const bgName = await window.api.getColorName(background)
       setFormattedForeground(fg)
       setFormattedBackground(bg)
+      setForegroundName(fgName ?? 'Unknown')
+      setBackgroundName(bgName ?? 'Unknown')
     }
     updateFormats()
   }, [foreground, background, colorFormat])
+
+  const getReadableTextColor = (hex: string): string => {
+    const raw = hex.replace('#', '')
+    const fullHex =
+      raw.length === 3
+        ? raw
+            .split('')
+            .map((c) => `${c}${c}`)
+            .join('')
+        : raw
+    const r = Number.parseInt(fullHex.slice(0, 2), 16)
+    const g = Number.parseInt(fullHex.slice(2, 4), 16)
+    const b = Number.parseInt(fullHex.slice(4, 6), 16)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return luminance > 0.62 ? '#111111' : '#ffffff'
+  }
 
   const handleCopy = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {
@@ -105,7 +127,7 @@ export function ColorDisplay(): React.ReactNode {
       <div className="color-pair-row">
         <div
           className="color-section color-tile"
-          style={{ backgroundColor: foreground }}
+          style={{ backgroundColor: foreground, color: getReadableTextColor(foreground) }}
           onClick={() => handlePickColorInput('foreground')}
           role="button"
           tabIndex={0}
@@ -129,7 +151,7 @@ export function ColorDisplay(): React.ReactNode {
                   title="Pick color (⌘D)"
                   aria-label="Pick foreground color"
                 >
-                  🎨
+                  <span className="icon-glyph">◉</span>
                 </button>
                 <button
                   className="color-input-btn hover-reveal"
@@ -140,12 +162,15 @@ export function ColorDisplay(): React.ReactNode {
                   title="Color picker"
                   aria-label="Open foreground color picker"
                 >
-                  📱
+                  <span className="icon-glyph">▣</span>
                 </button>
               </div>
             </div>
             <div className="color-info">
-              <span className="color-value">{formattedForeground || foreground}</span>
+              <div className="color-meta">
+                <span className="color-value">{formattedForeground || foreground}</span>
+                <span className="color-name">{foregroundName}</span>
+              </div>
               <button
                 className={`copy-btn hover-reveal ${copied === 'foreground' ? 'copied' : ''}`}
                 onClick={(e) => {
@@ -153,8 +178,9 @@ export function ColorDisplay(): React.ReactNode {
                   void handleCopy('foreground')
                 }}
                 title="Copy (⌘C)"
+                aria-label="Copy foreground color"
               >
-                {copied === 'foreground' ? 'Copied!' : 'Copy'}
+                <span className="icon-glyph">{copied === 'foreground' ? '✓' : '⎘'}</span>
               </button>
             </div>
           </div>
@@ -162,7 +188,7 @@ export function ColorDisplay(): React.ReactNode {
 
         <div
           className="color-section color-tile"
-          style={{ backgroundColor: background }}
+          style={{ backgroundColor: background, color: getReadableTextColor(background) }}
           onClick={() => handlePickColorInput('background')}
           role="button"
           tabIndex={0}
@@ -186,7 +212,7 @@ export function ColorDisplay(): React.ReactNode {
                   title="Pick color (⌘⇧D)"
                   aria-label="Pick background color"
                 >
-                  🎨
+                  <span className="icon-glyph">◉</span>
                 </button>
                 <button
                   className="color-input-btn hover-reveal"
@@ -197,12 +223,15 @@ export function ColorDisplay(): React.ReactNode {
                   title="Color picker"
                   aria-label="Open background color picker"
                 >
-                  📱
+                  <span className="icon-glyph">▣</span>
                 </button>
               </div>
             </div>
             <div className="color-info">
-              <span className="color-value">{formattedBackground || background}</span>
+              <div className="color-meta">
+                <span className="color-value">{formattedBackground || background}</span>
+                <span className="color-name">{backgroundName}</span>
+              </div>
               <button
                 className={`copy-btn hover-reveal ${copied === 'background' ? 'copied' : ''}`}
                 onClick={(e) => {
@@ -210,17 +239,15 @@ export function ColorDisplay(): React.ReactNode {
                   void handleCopy('background')
                 }}
                 title="Copy (⌘⇧C)"
+                aria-label="Copy background color"
               >
-                {copied === 'background' ? 'Copied!' : 'Copy'}
+                <span className="icon-glyph">{copied === 'background' ? '✓' : '⎘'}</span>
               </button>
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="color-meta-row">
-        <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)">
-          ⇄
+        <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)" aria-label="Swap colors">
+          <span className="icon-glyph">⇅</span>
         </button>
       </div>
     </div>
