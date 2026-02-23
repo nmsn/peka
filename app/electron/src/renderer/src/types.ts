@@ -72,6 +72,9 @@ export interface PikaAPI {
   closeWindow: () => Promise<boolean>
   isWindowMaximized: () => Promise<boolean>
   onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
+  showAbout: () => Promise<boolean>
+  checkForUpdates: () => Promise<boolean>
+  quitApp: () => Promise<boolean>
 }
 
 declare global {

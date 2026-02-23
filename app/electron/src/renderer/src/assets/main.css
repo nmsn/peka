@@ -60,6 +60,7 @@ body {
   min-height: 28px;
   padding: var(--space-xs) var(--space-lg) var(--space-sm) 78px;
   border-bottom: 1px solid var(--color-divider);
+  -webkit-app-region: drag;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -75,7 +76,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  flex: 1;
+  flex: 0 0 auto;
   justify-content: space-between;
 }
 
@@ -129,6 +130,49 @@ body {
 
 .titlebar-settings-icon:hover {
   color: var(--color-primary);
+}
+
+.settings-menu {
+  position: relative;
+}
+
+.settings-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 148px;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid var(--color-divider);
+  background: rgba(23, 23, 23, 0.95);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 20;
+}
+
+.settings-item {
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settings-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.settings-item.danger {
+  color: #ff8d86;
 }
 
 .app-main {

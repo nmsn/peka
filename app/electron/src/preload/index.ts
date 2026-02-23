@@ -74,6 +74,9 @@ export interface PikaAPI {
   closeWindow: () => Promise<boolean>
   isWindowMaximized: () => Promise<boolean>
   onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
+  showAbout: () => Promise<boolean>
+  checkForUpdates: () => Promise<boolean>
+  quitApp: () => Promise<boolean>
 }
 
 declare global {
@@ -144,7 +147,10 @@ const api: PikaAPI = {
   isWindowMaximized: (): Promise<boolean> => ipcRenderer.invoke('window-is-maximized'),
   onWindowMaximizedChange: (callback: (maximized: boolean) => void): void => {
     ipcRenderer.on('window:maximized', (_event, maximized) => callback(Boolean(maximized)))
-  }
+  },
+  showAbout: (): Promise<boolean> => ipcRenderer.invoke('app-show-about'),
+  checkForUpdates: (): Promise<boolean> => ipcRenderer.invoke('app-check-for-updates'),
+  quitApp: (): Promise<boolean> => ipcRenderer.invoke('app-quit')
 }
 
 if (process.contextIsolated) {

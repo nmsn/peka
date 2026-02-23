@@ -1,5 +1,6 @@
-import { ipcMain, clipboard, BrowserWindow } from 'electron'
+import { ipcMain, clipboard, BrowserWindow, app } from 'electron'
 import log from 'electron-log'
+import { autoUpdater } from 'electron-updater'
 import { getSettings, setSetting, setForegroundColor, setBackgroundColor } from './store'
 import { formatColor, formatForCopy, getColorName, parseColor, hexToColorValue } from './color'
 import { getWCAGContrast, getAPCAContrast } from './accessibility'
@@ -136,6 +137,26 @@ export const registerIpcHandlers = (): void => {
   ipcMain.handle('window-is-maximized', (event) => {
     const window = BrowserWindow.fromWebContents(event.sender)
     return window?.isMaximized() ?? false
+  })
+
+  ipcMain.handle('app-show-about', () => {
+    app.showAboutPanel()
+    return true
+  })
+
+  ipcMain.handle('app-check-for-updates', async () => {
+    try {
+      await autoUpdater.checkForUpdatesAndNotify()
+      return true
+    } catch (error) {
+      log.error('Failed to check for updates:', error)
+      return false
+    }
+  })
+
+  ipcMain.handle('app-quit', () => {
+    app.quit()
+    return true
   })
 
   log.info('IPC handlers registered')
