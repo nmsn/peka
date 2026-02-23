@@ -43,6 +43,11 @@ export interface Settings {
   backgroundColor: string
 }
 
+export interface AppInfo {
+  name: string
+  version: string
+}
+
 export interface PikaAPI {
   getSettings: () => Promise<Settings>
   setSetting: (key: string, value: unknown) => Promise<boolean>
@@ -75,6 +80,7 @@ export interface PikaAPI {
   isWindowMaximized: () => Promise<boolean>
   onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
   showAbout: () => Promise<boolean>
+  getAppInfo: () => Promise<AppInfo>
   checkForUpdates: () => Promise<boolean>
   quitApp: () => Promise<boolean>
 }
@@ -149,6 +155,7 @@ const api: PikaAPI = {
     ipcRenderer.on('window:maximized', (_event, maximized) => callback(Boolean(maximized)))
   },
   showAbout: (): Promise<boolean> => ipcRenderer.invoke('app-show-about'),
+  getAppInfo: (): Promise<AppInfo> => ipcRenderer.invoke('app-get-info'),
   checkForUpdates: (): Promise<boolean> => ipcRenderer.invoke('app-check-for-updates'),
   quitApp: (): Promise<boolean> => ipcRenderer.invoke('app-quit')
 }

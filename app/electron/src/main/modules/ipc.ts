@@ -1,6 +1,8 @@
 import { ipcMain, clipboard, BrowserWindow, app } from 'electron'
 import log from 'electron-log'
 import { autoUpdater } from 'electron-updater'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { getSettings, setSetting, setForegroundColor, setBackgroundColor } from './store'
 import { formatColor, formatForCopy, getColorName, parseColor, hexToColorValue } from './color'
 import { getWCAGContrast, getAPCAContrast } from './accessibility'
@@ -142,6 +144,26 @@ export const registerIpcHandlers = (): void => {
   ipcMain.handle('app-show-about', () => {
     app.showAboutPanel()
     return true
+  })
+
+  ipcMain.handle('app-get-info', async () => {
+    let version = app.getVersion()
+
+    try {
+      const packageJsonPath = join(app.getAppPath(), 'package.json')
+      const packageContent = await readFile(packageJsonPath, 'utf-8')
+      const packageJson = JSON.parse(packageContent) as { version?: string }
+      if (typeof packageJson.version === 'string' && packageJson.version.trim()) {
+        version = packageJson.version.trim()
+      }
+    } catch (error) {
+      log.warn('Failed to read version from package.json, fallback to app.getVersion()', error)
+    }
+
+    return {
+      name: app.getName(),
+      version
+    }
   })
 
   ipcMain.handle('app-check-for-updates', async () => {

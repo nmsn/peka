@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useColorStore } from '../stores/colorStore'
-import { Check, ChevronRight, ClipboardCopy, FileText, Info, LogOut, RefreshCcw, Settings } from 'lucide-react'
+import { Check, ChevronRight, ClipboardCopy, FileText, Info, LogOut, Palette, RefreshCcw, Settings } from 'lucide-react'
 import type { ColorFormat } from '../types'
 
 interface TitleBarProps {
   onOpenSettings: () => void
+  onOpenAbout: () => void
 }
 
 const TITLEBAR_FORMATS: { value: ColorFormat; label: string }[] = [
@@ -16,7 +17,7 @@ const TITLEBAR_FORMATS: { value: ColorFormat; label: string }[] = [
   { value: 'oklch', label: 'OKLCH' }
 ]
 
-export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
+export function TitleBar({ onOpenSettings, onOpenAbout }: TitleBarProps): React.ReactNode {
   const {
     colorFormat,
     visibleColorFormats,
@@ -120,6 +121,7 @@ export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
                   role="menuitem"
                   onClick={() => setIsFormatMenuOpen((prev) => !prev)}
                 >
+                  <Palette className="icon-lucide" />
                   <span>颜色类型</span>
                   <ChevronRight className="icon-lucide settings-chevron" />
                 </button>
@@ -160,8 +162,8 @@ export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
                 type="button"
                 className="settings-item"
                 role="menuitem"
-                onClick={async () => {
-                  await window.api.showAbout()
+                onClick={() => {
+                  onOpenAbout()
                   setIsMenuOpen(false)
                 }}
               >

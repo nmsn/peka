@@ -16,6 +16,7 @@ interface ColorState {
   history: { foreground: string; background: string }[]
   historyIndex: number
   showPreferences: boolean
+  showAbout: boolean
 
   setForeground: (color: string) => void
   setBackground: (color: string) => void
@@ -29,6 +30,7 @@ interface ColorState {
   undo: () => void
   redo: () => void
   setShowPreferences: (show: boolean) => void
+  setShowAbout: (show: boolean) => void
   loadSettings: (settings: Settings) => void
 }
 
@@ -45,6 +47,7 @@ export const useColorStore = create<ColorState>((set, get) => ({
   history: [{ foreground: '#000000', background: '#ffffff' }],
   historyIndex: 0,
   showPreferences: false,
+  showAbout: false,
 
   setForeground: (color) => {
     const state = get()
@@ -147,6 +150,7 @@ export const useColorStore = create<ColorState>((set, get) => ({
   },
 
   setShowPreferences: (show) => set({ showPreferences: show }),
+  setShowAbout: (show) => set({ showAbout: show }),
 
   loadSettings: (settings) => {
     set({

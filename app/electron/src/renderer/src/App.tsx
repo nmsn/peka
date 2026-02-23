@@ -3,6 +3,7 @@ import { useColorStore } from './stores/colorStore'
 import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TitleBar } from './components/TitleBar'
+import { AboutModal } from './components/AboutModal'
 import './assets/main.css'
 
 import type { ReactNode } from 'react'
@@ -24,6 +25,8 @@ function App(): ReactNode {
     swapColors, 
     setColorFormat, 
     setShowPreferences,
+    showAbout,
+    setShowAbout,
     setForeground,
     setBackground,
     setPickerActive
@@ -105,11 +108,15 @@ function App(): ReactNode {
 
   return (
     <div className="app">
-      <TitleBar onOpenSettings={() => setShowPreferences(true)} />
+      <TitleBar
+        onOpenSettings={() => setShowPreferences(true)}
+        onOpenAbout={() => setShowAbout(true)}
+      />
       <main className="app-main">
         <ColorDisplay />
         <AccessibilityPanel />
       </main>
+      <AboutModal open={showAbout} onClose={() => setShowAbout(false)} />
     </div>
   )
 }
