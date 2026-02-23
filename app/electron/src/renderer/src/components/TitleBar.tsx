@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useColorStore } from '../stores/colorStore'
-import { Check, ChevronRight, ClipboardCopy, Info, LogOut, RefreshCcw, Settings } from 'lucide-react'
+import { Check, ChevronRight, ClipboardCopy, FileText, Info, LogOut, RefreshCcw, Settings } from 'lucide-react'
 import type { ColorFormat } from '../types'
 
 interface TitleBarProps {
@@ -68,6 +68,20 @@ export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
     setIsFormatMenuOpen(false)
   }
 
+  const handleCopyAllAsText = async (): Promise<void> => {
+    const entries = await Promise.all(
+      visibleColorFormats.map(async (format) => {
+        const fg = await window.api.formatColor(foreground, format)
+        const bg = await window.api.formatColor(background, format)
+        return `${format}\nforeground: ${fg}\nbackground: ${bg}`
+      })
+    )
+
+    await window.api.copyToClipboard(entries.join('\n\n'))
+    setIsMenuOpen(false)
+    setIsFormatMenuOpen(false)
+  }
+
   return (
     <header className="titlebar">
       <div className="titlebar-drag" />
@@ -102,7 +116,7 @@ export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
               <div className="settings-submenu-wrapper">
                 <button
                   type="button"
-                  className={`settings-item ${isFormatMenuOpen ? 'active' : ''}`}
+                  className="settings-item"
                   role="menuitem"
                   onClick={() => setIsFormatMenuOpen((prev) => !prev)}
                 >
@@ -176,6 +190,17 @@ export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
               >
                 <ClipboardCopy className="icon-lucide" />
                 <span>复制全部为 JSON</span>
+              </button>
+              <button
+                type="button"
+                className="settings-item"
+                role="menuitem"
+                onClick={async () => {
+                  await handleCopyAllAsText()
+                }}
+              >
+                <FileText className="icon-lucide" />
+                <span>复制全部为文本</span>
               </button>
               <button
                 type="button"

@@ -171,10 +171,6 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.settings-item.active {
-  background: rgba(255, 255, 255, 0.12);
-}
-
 .settings-submenu-wrapper {
   position: relative;
 }
