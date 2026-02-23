@@ -1,10 +1,13 @@
 import { create } from 'zustand'
 import type { Settings, ColorFormat, CopyFormat, ContrastResult, APCAResult } from '../types'
 
+const ALL_COLOR_FORMATS: ColorFormat[] = ['hex', 'rgb', 'hsb', 'hsl', 'lab', 'oklch']
+
 interface ColorState {
   foreground: string
   background: string
   colorFormat: ColorFormat
+  visibleColorFormats: ColorFormat[]
   copyFormat: CopyFormat
   contrastStandard: 'wcag' | 'apca'
   contrastResult: ContrastResult | APCAResult | null
@@ -18,6 +21,7 @@ interface ColorState {
   setBackground: (color: string) => void
   swapColors: () => void
   setColorFormat: (format: ColorFormat) => void
+  toggleVisibleColorFormat: (format: ColorFormat) => void
   setCopyFormat: (format: CopyFormat) => void
   setContrastStandard: (standard: 'wcag' | 'apca') => void
   setContrastResult: (result: ContrastResult | APCAResult | null) => void
@@ -32,6 +36,7 @@ export const useColorStore = create<ColorState>((set, get) => ({
   foreground: '#000000',
   background: '#ffffff',
   colorFormat: 'hex',
+  visibleColorFormats: [...ALL_COLOR_FORMATS],
   copyFormat: 'css',
   contrastStandard: 'wcag',
   contrastResult: null,
@@ -75,7 +80,41 @@ export const useColorStore = create<ColorState>((set, get) => ({
     })
   },
 
-  setColorFormat: (format) => set({ colorFormat: format }),
+  setColorFormat: (format) => {
+    const state = get()
+    if (state.visibleColorFormats.includes(format)) {
+      set({ colorFormat: format })
+      return
+    }
+    const nextVisible = ALL_COLOR_FORMATS.filter(
+      (item) => item === format || state.visibleColorFormats.includes(item)
+    )
+    set({
+      colorFormat: format,
+      visibleColorFormats: nextVisible
+    })
+  },
+  toggleVisibleColorFormat: (format) => {
+    const state = get()
+    const isVisible = state.visibleColorFormats.includes(format)
+
+    if (isVisible) {
+      const nextVisible = state.visibleColorFormats.filter((item) => item !== format)
+      if (nextVisible.length === 0) return
+      const nextColorFormat =
+        state.colorFormat === format ? nextVisible[0] : state.colorFormat
+      set({
+        visibleColorFormats: nextVisible,
+        colorFormat: nextColorFormat
+      })
+      return
+    }
+
+    const nextVisible = ALL_COLOR_FORMATS.filter(
+      (item) => item === format || state.visibleColorFormats.includes(item)
+    )
+    set({ visibleColorFormats: nextVisible })
+  },
   setCopyFormat: (format) => set({ copyFormat: format }),
   setContrastStandard: (standard) => set({ contrastStandard: standard }),
   setContrastResult: (result) => set({ contrastResult: result }),
