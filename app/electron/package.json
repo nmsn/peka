@@ -23,11 +23,12 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "electron-store": "^8.1.0",
+    "color-name-list": "^14.32.0",
+    "colord": "^2.9.3",
     "electron-log": "^5.0.0",
+    "electron-store": "^8.1.0",
     "electron-updater": "^6.3.9",
-    "zustand": "^4.4.0",
-    "colord": "^2.9.3"
+    "zustand": "^4.4.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",

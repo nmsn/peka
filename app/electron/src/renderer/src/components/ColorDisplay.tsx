@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { colornames } from 'color-name-list'
 import { useColorStore } from '../stores/colorStore'
 
 declare global {
@@ -8,6 +9,62 @@ declare global {
   interface Window {
     EyeDropper: new () => EyeDropper
   }
+}
+
+interface ColorNameItem {
+  name: string
+  hex: string
+}
+
+const COLOR_NAMES = colornames as ColorNameItem[]
+const COLOR_NAME_CACHE = new Map<string, string>()
+
+const normalizeHex = (hex: string): string | null => {
+  const raw = hex.replace('#', '').trim()
+  if (!/^[0-9a-fA-F]{3}$|^[0-9a-fA-F]{6}$/.test(raw)) return null
+  if (raw.length === 3) {
+    return raw
+      .split('')
+      .map((c) => `${c}${c}`)
+      .join('')
+      .toUpperCase()
+  }
+  return raw.toUpperCase()
+}
+
+const hexToRgb = (hex: string): { r: number; g: number; b: number } => ({
+  r: Number.parseInt(hex.slice(0, 2), 16),
+  g: Number.parseInt(hex.slice(2, 4), 16),
+  b: Number.parseInt(hex.slice(4, 6), 16)
+})
+
+const getClosestColorName = (hex: string): string => {
+  const normalizedHex = normalizeHex(hex)
+  if (!normalizedHex) return 'Unknown'
+
+  const cached = COLOR_NAME_CACHE.get(normalizedHex)
+  if (cached) return cached
+
+  const target = hexToRgb(normalizedHex)
+  let closest = 'Unknown'
+  let minDistance = Number.POSITIVE_INFINITY
+
+  for (const item of COLOR_NAMES) {
+    const listHex = normalizeHex(item.hex)
+    if (!listHex) continue
+    const rgb = hexToRgb(listHex)
+    const distance =
+      (target.r - rgb.r) ** 2 + (target.g - rgb.g) ** 2 + (target.b - rgb.b) ** 2
+
+    if (distance < minDistance) {
+      minDistance = distance
+      closest = item.name
+      if (distance === 0) break
+    }
+  }
+
+  COLOR_NAME_CACHE.set(normalizedHex, closest)
+  return closest
 }
 
 export function ColorDisplay(): React.ReactNode {
@@ -32,12 +89,10 @@ export function ColorDisplay(): React.ReactNode {
     const updateFormats = async (): Promise<void> => {
       const fg = await window.api.formatColor(foreground, colorFormat)
       const bg = await window.api.formatColor(background, colorFormat)
-      const fgName = await window.api.getColorName(foreground)
-      const bgName = await window.api.getColorName(background)
       setFormattedForeground(fg)
       setFormattedBackground(bg)
-      setForegroundName(fgName ?? 'Unknown')
-      setBackgroundName(bgName ?? 'Unknown')
+      setForegroundName(getClosestColorName(foreground))
+      setBackgroundName(getClosestColorName(background))
     }
     updateFormats()
   }, [foreground, background, colorFormat])
