@@ -248,6 +248,7 @@ body {
 
 .color-meta {
   min-width: 0;
+  flex: 1;
 }
 
 .color-name {
@@ -259,7 +260,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 120px;
 }
 
 .color-value {
@@ -271,7 +271,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 160px;
 }
 
 .copy-btn {

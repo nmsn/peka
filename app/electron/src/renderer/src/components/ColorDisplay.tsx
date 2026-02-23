@@ -73,7 +73,6 @@ export function ColorDisplay(): React.ReactNode {
     foreground,
     background,
     colorFormat,
-    copyFormat,
     setForeground,
     setBackground,
     swapColors
@@ -90,8 +89,8 @@ export function ColorDisplay(): React.ReactNode {
     const updateFormats = async (): Promise<void> => {
       const fg = await window.api.formatColor(foreground, colorFormat)
       const bg = await window.api.formatColor(background, colorFormat)
-      setFormattedForeground(fg)
-      setFormattedBackground(bg)
+      setFormattedForeground(fg.replace(/\s+/g, ''))
+      setFormattedBackground(bg.replace(/\s+/g, ''))
       setForegroundName(getClosestColorName(foreground))
       setBackgroundName(getClosestColorName(background))
     }
@@ -117,12 +116,12 @@ export function ColorDisplay(): React.ReactNode {
   const handleCopy = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {
       const color = target === 'foreground' ? foreground : background
-      const formatted = await window.api.formatForCopy(color, copyFormat)
+      const formatted = await window.api.formatColor(color, colorFormat)
       await window.api.copyToClipboard(formatted)
       setCopied(target)
       setTimeout(() => setCopied(null), 1500)
     },
-    [foreground, background, copyFormat]
+    [foreground, background, colorFormat]
   )
 
   const handlePickColor = useCallback(
