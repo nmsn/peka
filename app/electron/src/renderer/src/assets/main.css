@@ -330,10 +330,12 @@ body {
   opacity: 0.8;
 }
 
-.icon-glyph {
-  font-size: var(--icon-size);
-  line-height: 1;
-  display: inline-block;
+.icon-lucide {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  stroke-width: 1.9;
+  color: currentColor;
+  flex-shrink: 0;
 }
 
 .accessibility-panel {

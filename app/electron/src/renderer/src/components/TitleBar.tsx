@@ -1,4 +1,5 @@
 import { useColorStore } from '../stores/colorStore'
+import { Settings } from 'lucide-react'
 import type { ColorFormat } from '../types'
 
 interface TitleBarProps {
@@ -41,7 +42,7 @@ export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {
           title="Settings (⌘,)"
           aria-label="Open settings"
         >
-          ⚙
+          <Settings className="icon-lucide" />
         </button>
       </div>
     </header>

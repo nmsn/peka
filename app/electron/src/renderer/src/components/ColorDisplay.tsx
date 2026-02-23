@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { ArrowUpDown, Check, Copy, Palette, Pipette } from 'lucide-react'
 import { colornames } from 'color-name-list'
 import { useColorStore } from '../stores/colorStore'
 
@@ -183,13 +184,13 @@ export function ColorDisplay(): React.ReactNode {
         <div
           className="color-section color-tile"
           style={{ backgroundColor: foreground, color: getReadableTextColor(foreground) }}
-          onClick={() => handlePickColorInput('foreground')}
+          onClick={() => void handlePickColor('foreground')}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()
-              handlePickColorInput('foreground')
+              void handlePickColor('foreground')
             }
           }}
         >
@@ -206,7 +207,7 @@ export function ColorDisplay(): React.ReactNode {
                   title="Pick color (⌘D)"
                   aria-label="Pick foreground color"
                 >
-                  <span className="icon-glyph">◉</span>
+                  <Pipette className="icon-lucide" />
                 </button>
                 <button
                   className="color-input-btn hover-reveal"
@@ -217,7 +218,7 @@ export function ColorDisplay(): React.ReactNode {
                   title="Color picker"
                   aria-label="Open foreground color picker"
                 >
-                  <span className="icon-glyph">▣</span>
+                  <Palette className="icon-lucide" />
                 </button>
               </div>
             </div>
@@ -235,7 +236,11 @@ export function ColorDisplay(): React.ReactNode {
                 title="Copy (⌘C)"
                 aria-label="Copy foreground color"
               >
-                <span className="icon-glyph">{copied === 'foreground' ? '✓' : '⎘'}</span>
+                {copied === 'foreground' ? (
+                  <Check className="icon-lucide" />
+                ) : (
+                  <Copy className="icon-lucide" />
+                )}
               </button>
             </div>
           </div>
@@ -244,13 +249,13 @@ export function ColorDisplay(): React.ReactNode {
         <div
           className="color-section color-tile"
           style={{ backgroundColor: background, color: getReadableTextColor(background) }}
-          onClick={() => handlePickColorInput('background')}
+          onClick={() => void handlePickColor('background')}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()
-              handlePickColorInput('background')
+              void handlePickColor('background')
             }
           }}
         >
@@ -267,7 +272,7 @@ export function ColorDisplay(): React.ReactNode {
                   title="Pick color (⌘⇧D)"
                   aria-label="Pick background color"
                 >
-                  <span className="icon-glyph">◉</span>
+                  <Pipette className="icon-lucide" />
                 </button>
                 <button
                   className="color-input-btn hover-reveal"
@@ -278,7 +283,7 @@ export function ColorDisplay(): React.ReactNode {
                   title="Color picker"
                   aria-label="Open background color picker"
                 >
-                  <span className="icon-glyph">▣</span>
+                  <Palette className="icon-lucide" />
                 </button>
               </div>
             </div>
@@ -296,13 +301,17 @@ export function ColorDisplay(): React.ReactNode {
                 title="Copy (⌘⇧C)"
                 aria-label="Copy background color"
               >
-                <span className="icon-glyph">{copied === 'background' ? '✓' : '⎘'}</span>
+                {copied === 'background' ? (
+                  <Check className="icon-lucide" />
+                ) : (
+                  <Copy className="icon-lucide" />
+                )}
               </button>
             </div>
           </div>
         </div>
         <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)" aria-label="Swap colors">
-          <span className="icon-glyph">⇅</span>
+          <ArrowUpDown className="icon-lucide" />
         </button>
       </div>
     </div>

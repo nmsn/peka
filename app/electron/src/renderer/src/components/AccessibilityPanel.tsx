@@ -4,6 +4,31 @@ import type { ContrastResult, APCAResult } from '../types'
 
 import type { ReactNode } from 'react'
 
+const isWCAGResult = (value: unknown): value is ContrastResult => {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Partial<ContrastResult>
+  return (
+    typeof candidate.ratio === 'number' &&
+    typeof candidate.wcagAA === 'boolean' &&
+    typeof candidate.wcagAALarge === 'boolean' &&
+    typeof candidate.wcagAAA === 'boolean' &&
+    typeof candidate.wcagAAALarge === 'boolean'
+  )
+}
+
+const isAPCAResult = (value: unknown): value is APCAResult => {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Partial<APCAResult>
+  return (
+    typeof candidate.lc === 'number' &&
+    (candidate.level === 'AA' || candidate.level === 'AAA' || candidate.level === 'Fail') &&
+    (candidate.fontSize === 'normal' ||
+      candidate.fontSize === 'large' ||
+      candidate.fontSize === 'heading' ||
+      candidate.fontSize === 'graphic')
+  )
+}
+
 export function AccessibilityPanel(): ReactNode {
   const { foreground, background, contrastStandard, contrastResult, setContrastResult, setContrastStandard } =
     useColorStore()
@@ -11,24 +36,33 @@ export function AccessibilityPanel(): ReactNode {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    let active = true
+
     const checkContrast = async (): Promise<void> => {
       setLoading(true)
       try {
         if (contrastStandard === 'wcag') {
           const result = await window.api.getWcagContrast(foreground, background)
-          setContrastResult(result)
+          if (!active) return
+          setContrastResult(isWCAGResult(result) ? result : null)
         } else {
           const result = await window.api.getApcbContrast(foreground, background)
-          setContrastResult(result)
+          if (!active) return
+          setContrastResult(isAPCAResult(result) ? result : null)
         }
       } catch (error) {
         console.error('Failed to check contrast:', error)
+        if (active) setContrastResult(null)
       } finally {
-        setLoading(false)
+        if (active) setLoading(false)
       }
     }
 
-    checkContrast()
+    void checkContrast()
+
+    return () => {
+      active = false
+    }
   }, [foreground, background, contrastStandard, setContrastResult])
 
   const renderComplianceToggle = (label: string, pass: boolean): ReactNode => (
@@ -124,11 +158,13 @@ export function AccessibilityPanel(): ReactNode {
     <div className="accessibility-panel">
       {loading ? (
         <div className="loading">Calculating...</div>
-      ) : contrastResult ? (
+      ) : contrastResult && contrastStandard === 'wcag' && isWCAGResult(contrastResult) ? (
         <div className="contrast-footer-layout">
-          {contrastStandard === 'wcag'
-            ? renderWCAG(contrastResult as ContrastResult)
-            : renderAPCA(contrastResult as APCAResult)}
+          {renderWCAG(contrastResult)}
+        </div>
+      ) : contrastResult && contrastStandard === 'apca' && isAPCAResult(contrastResult) ? (
+        <div className="contrast-footer-layout">
+          {renderAPCA(contrastResult)}
         </div>
       ) : (
         <div className="no-result">No result</div>
