@@ -196,7 +196,7 @@ export const registerShortcuts = (mainWindow: BrowserWindow): void => {
   })
 
   globalShortcut.register('CommandOrControl+6', () => {
-    mainWindow.webContents.send('shortcut:format', 'opengl')
+    mainWindow.webContents.send('shortcut:format', 'oklch')
   })
 
   globalShortcut.register('CommandOrControl+C', () => {

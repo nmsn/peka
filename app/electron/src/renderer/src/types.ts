@@ -1,4 +1,4 @@
-export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'opengl'
+export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
 export type AppMode = 'menubar' | 'regular' | 'hidden'
 export type ContrastStandard = 'wcag' | 'apca'
@@ -9,7 +9,7 @@ export interface ColorValue {
   hsb: { h: number; s: number; b: number }
   hsl: { h: number; s: number; l: number }
   lab: { l: number; a: number; b: number }
-  opengl: { r: number; g: number; b: number; a: number }
+  oklch: { l: number; c: number; h: number; a: number }
 }
 
 export interface ContrastResult {

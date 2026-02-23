@@ -68,6 +68,16 @@ const getClosestColorName = (hex: string): string => {
   return closest
 }
 
+const normalizeDisplayValue = (value: string, format: string): string => {
+  if (format === 'oklch') {
+    return value
+      .replace(/\s*\/\s*/g, ' / ')
+      .replace(/\s+/g, ' ')
+      .trim()
+  }
+  return value.replace(/\s+/g, '')
+}
+
 export function ColorDisplay(): React.ReactNode {
   const {
     foreground,
@@ -89,8 +99,8 @@ export function ColorDisplay(): React.ReactNode {
     const updateFormats = async (): Promise<void> => {
       const fg = await window.api.formatColor(foreground, colorFormat)
       const bg = await window.api.formatColor(background, colorFormat)
-      setFormattedForeground(fg.replace(/\s+/g, ''))
-      setFormattedBackground(bg.replace(/\s+/g, ''))
+      setFormattedForeground(normalizeDisplayValue(fg, colorFormat))
+      setFormattedBackground(normalizeDisplayValue(bg, colorFormat))
       setForegroundName(getClosestColorName(foreground))
       setBackgroundName(getClosestColorName(background))
     }

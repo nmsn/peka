@@ -4,7 +4,7 @@ import namesPlugin from 'colord/plugins/names'
 
 extend([labPlugin, namesPlugin])
 
-export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'opengl'
+export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
 
 export interface ColorValue {
@@ -13,7 +13,37 @@ export interface ColorValue {
   hsb: { h: number; s: number; b: number }
   hsl: { h: number; s: number; l: number }
   lab: { l: number; a: number; b: number }
-  opengl: { r: number; g: number; b: number; a: number }
+  oklch: { l: number; c: number; h: number; a: number }
+}
+
+const srgbToLinear = (value: number): number => {
+  const normalized = value / 255
+  return normalized <= 0.04045
+    ? normalized / 12.92
+    : ((normalized + 0.055) / 1.055) ** 2.4
+}
+
+const rgbToOklch = (r: number, g: number, b: number): { l: number; c: number; h: number } => {
+  const lr = srgbToLinear(r)
+  const lg = srgbToLinear(g)
+  const lb = srgbToLinear(b)
+
+  const l = 0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb
+  const m = 0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb
+  const s = 0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb
+
+  const lRoot = Math.cbrt(l)
+  const mRoot = Math.cbrt(m)
+  const sRoot = Math.cbrt(s)
+
+  const oklabL = 0.2104542553 * lRoot + 0.793617785 * mRoot - 0.0040720468 * sRoot
+  const oklabA = 1.9779984951 * lRoot - 2.428592205 * mRoot + 0.4505937099 * sRoot
+  const oklabB = 0.0259040371 * lRoot + 0.7827717662 * mRoot - 0.808675766 * sRoot
+
+  const chroma = Math.sqrt(oklabA ** 2 + oklabB ** 2)
+  const hue = ((Math.atan2(oklabB, oklabA) * 180) / Math.PI + 360) % 360
+
+  return { l: oklabL, c: chroma, h: hue }
 }
 
 export const hexToColorValue = (hex: string): ColorValue => {
@@ -23,6 +53,7 @@ export const hexToColorValue = (hex: string): ColorValue => {
   const hsb = { h: hsl.h, s: hsl.s, b: (rgb.r > 0 ? Math.max(rgb.r, Math.max(rgb.g, rgb.b)) / 255 : 0) * 100 }
   const lab = color.toLab()
   const alpha = rgb.a
+  const oklch = rgbToOklch(rgb.r, rgb.g, rgb.b)
 
   return {
     hex: color.toHex(),
@@ -30,10 +61,10 @@ export const hexToColorValue = (hex: string): ColorValue => {
     hsb,
     hsl: { h: hsl.h, s: hsl.s, l: hsl.l },
     lab: { l: lab.l, a: lab.a, b: lab.b },
-    opengl: {
-      r: rgb.r / 255,
-      g: rgb.g / 255,
-      b: rgb.b / 255,
+    oklch: {
+      l: oklch.l,
+      c: oklch.c,
+      h: oklch.h,
       a: alpha
     }
   }
@@ -56,9 +87,10 @@ export const formatColor = (hex: string, format: ColorFormat): string => {
     case 'lab':
       const lab = color.toLab()
       return `lab(${Math.round(lab.l)}%, ${Math.round(lab.a * 100) / 100}, ${Math.round(lab.b * 100) / 100})`
-    case 'opengl':
+    case 'oklch':
       const rgbVal = color.toRgb()
-      return `glColor4f(${rgbVal.r / 255}, ${rgbVal.g / 255}, ${rgbVal.b / 255}, ${rgbVal.a})`
+      const oklch = rgbToOklch(rgbVal.r, rgbVal.g, rgbVal.b)
+      return `oklch(${(oklch.l * 100).toFixed(2)}% ${oklch.c.toFixed(4)} ${oklch.h.toFixed(2)}${rgbVal.a < 1 ? ` / ${rgbVal.a.toFixed(2)}` : ''})`
     default:
       return color.toHex()
   }

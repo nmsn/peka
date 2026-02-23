@@ -13,7 +13,7 @@ const TITLEBAR_FORMATS: { value: ColorFormat; label: string }[] = [
   { value: 'hsb', label: 'HSB' },
   { value: 'hsl', label: 'HSL' },
   { value: 'lab', label: 'LAB' },
-  { value: 'opengl', label: 'OpenGL' }
+  { value: 'oklch', label: 'OKLCH' }
 ]
 
 export function TitleBar({ onOpenSettings }: TitleBarProps): React.ReactNode {

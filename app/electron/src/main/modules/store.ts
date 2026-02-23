@@ -1,7 +1,7 @@
 import Store from 'electron-store'
 import log from 'electron-log'
 
-export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'opengl'
+export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
 export type AppMode = 'menubar' | 'regular' | 'hidden'
 export type ContrastStandard = 'wcag' | 'apca'
@@ -41,8 +41,12 @@ const store = new Store<StoreSchema>({
 log.info('Store initialized:', store.path)
 
 export const getSettings = (): StoreSchema => {
+  const rawColorFormat = store.get('colorFormat') as string
+  const normalizedColorFormat: ColorFormat =
+    rawColorFormat === 'opengl' ? 'oklch' : (rawColorFormat as ColorFormat)
+
   return {
-    colorFormat: store.get('colorFormat'),
+    colorFormat: normalizedColorFormat,
     copyFormat: store.get('copyFormat'),
     appMode: store.get('appMode'),
     appFloating: store.get('appFloating'),
