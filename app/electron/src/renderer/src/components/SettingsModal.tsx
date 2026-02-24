@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Monitor, Moon, Sun, Keyboard, X } from 'lucide-react'
+import { Monitor, Moon, Sun, X } from 'lucide-react'
 
 interface SettingsModalProps {
   open: boolean
@@ -12,7 +12,6 @@ interface AppSettings {
   hidePekaWhilePicking: boolean
   hideColorName: boolean
   appMode: 'menubar' | 'dock' | 'regular'
-  globalShortcut: string
 }
 
 export function SettingsModal({ open, onClose }: SettingsModalProps): React.ReactNode {
@@ -21,8 +20,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
     hideMenuBarIcon: false,
     hidePekaWhilePicking: false,
     hideColorName: false,
-    appMode: 'menubar',
-    globalShortcut: 'CmdOrCtrl+Shift+P'
+    appMode: 'menubar'
   })
 
   useEffect(() => {
@@ -36,8 +34,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
           hideMenuBarIcon: (stored as Record<string, unknown>).hideMenuBarIcon as boolean ?? false,
           hidePekaWhilePicking: stored.hidePikaWhilePicking ?? false,
           hideColorName: (stored as Record<string, unknown>).hideColorName as boolean ?? false,
-          appMode: (stored as Record<string, unknown>).appMode as 'menubar' | 'dock' | 'regular' ?? 'menubar',
-          globalShortcut: (stored as Record<string, unknown>).globalShortcut as string ?? 'CmdOrCtrl+Shift+P'
+          appMode: (stored as Record<string, unknown>).appMode as 'menubar' | 'dock' | 'regular' ?? 'menubar'
         })
       } catch (error) {
         console.error('Failed to load settings:', error)
@@ -156,14 +153,6 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
                 <Sun className="icon-lucide" />
                 <span>常规窗口</span>
               </label>
-            </div>
-          </section>
-
-          <section className="settings-section">
-            <h3>全局快捷键</h3>
-            <div className="settings-shortcut">
-              <Keyboard className="icon-lucide" />
-              <span className="shortcut-key">{settings.globalShortcut}</span>
             </div>
           </section>
         </div>

@@ -187,65 +187,6 @@ export const registerIpcHandlers = (): void => {
 
 export const registerShortcuts = (mainWindow: BrowserWindow): void => {
   log.info('Registering global shortcuts')
-
-  const { globalShortcut } = require('electron')
-
-  globalShortcut.register('F3', () => {
-    mainWindow.webContents.send('shortcut:pick-foreground')
-  })
-
-  globalShortcut.register('F4', () => {
-    mainWindow.webContents.send('shortcut:pick-background')
-  })
-
-  globalShortcut.register('CommandOrControl+1', () => {
-    mainWindow.webContents.send('shortcut:format', 'hex')
-  })
-
-  globalShortcut.register('CommandOrControl+2', () => {
-    mainWindow.webContents.send('shortcut:format', 'rgb')
-  })
-
-  globalShortcut.register('CommandOrControl+3', () => {
-    mainWindow.webContents.send('shortcut:format', 'hsb')
-  })
-
-  globalShortcut.register('CommandOrControl+4', () => {
-    mainWindow.webContents.send('shortcut:format', 'hsl')
-  })
-
-  globalShortcut.register('CommandOrControl+5', () => {
-    mainWindow.webContents.send('shortcut:format', 'lab')
-  })
-
-  globalShortcut.register('CommandOrControl+6', () => {
-    mainWindow.webContents.send('shortcut:format', 'oklch')
-  })
-
-  globalShortcut.register('CommandOrControl+C', () => {
-    mainWindow.webContents.send('shortcut:copy')
-  })
-
-  globalShortcut.register('CommandOrControl+Shift+C', () => {
-    mainWindow.webContents.send('shortcut:copy-background')
-  })
-
-  globalShortcut.register('CommandOrControl+X', () => {
-    mainWindow.webContents.send('shortcut:swap')
-  })
-
-  globalShortcut.register('CommandOrControl+Z', () => {
-    mainWindow.webContents.send('shortcut:undo')
-  })
-
-  globalShortcut.register('CommandOrControl+Shift+Z', () => {
-    mainWindow.webContents.send('shortcut:redo')
-  })
-
-  globalShortcut.register('CommandOrControl+,', () => {
-    mainWindow.webContents.send('shortcut:preferences')
-  })
-
   log.info('Global shortcuts registered')
 }
 

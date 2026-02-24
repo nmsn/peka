@@ -97,14 +97,12 @@ function createTray(): void {
       },
       {
         label: 'Pick Foreground Color',
-        accelerator: 'F3',
         click: (): void => {
           mainWindow?.webContents.send('shortcut:pick-foreground')
         }
       },
       {
         label: 'Pick Background Color',
-        accelerator: 'F4',
         click: (): void => {
           mainWindow?.webContents.send('shortcut:pick-background')
         }
