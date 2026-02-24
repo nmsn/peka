@@ -190,11 +190,11 @@ export const registerShortcuts = (mainWindow: BrowserWindow): void => {
 
   const { globalShortcut } = require('electron')
 
-  globalShortcut.register('CommandOrControl+D', () => {
+  globalShortcut.register('F3', () => {
     mainWindow.webContents.send('shortcut:pick-foreground')
   })
 
-  globalShortcut.register('CommandOrControl+Shift+D', () => {
+  globalShortcut.register('F4', () => {
     mainWindow.webContents.send('shortcut:pick-background')
   })
 
