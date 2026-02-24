@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ArrowUpDown, Check, Copy, Palette, Pipette } from 'lucide-react'
+import { ArrowRightLeft, Check, Copy, Palette, Pipette } from 'lucide-react'
 import { colornames } from 'color-name-list'
 import { useColorStore } from '../stores/colorStore'
 
@@ -320,7 +320,7 @@ export function ColorDisplay(): React.ReactNode {
           </div>
         </div>
         <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)" aria-label="Swap colors">
-          <ArrowUpDown className="icon-lucide" />
+          <ArrowRightLeft className="icon-lucide" />
         </button>
       </div>
     </div>
