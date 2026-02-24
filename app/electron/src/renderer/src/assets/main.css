@@ -776,11 +776,6 @@ body {
     flex: 0 0 var(--footer-height);
   }
 
-  .footer-divider {
-    height: 1px;
-    width: 100%;
-  }
-
   .titlebar-format-tab:nth-child(n + 5) {
     display: none;
   }
