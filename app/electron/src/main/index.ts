@@ -172,8 +172,11 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
+  destroyTray()
   if (process.platform !== 'darwin') {
     app.quit()
+  } else {
+    app.exit(0)
   }
 })
 
