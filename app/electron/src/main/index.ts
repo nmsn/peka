@@ -139,6 +139,13 @@ export function getColorPicker(): ScreenColorPicker | null {
   return colorPicker
 }
 
+export function destroyTray(): void {
+  if (tray) {
+    tray.destroy()
+    tray = null
+  }
+}
+
 app.whenReady().then(() => {
   log.info('App ready')
 

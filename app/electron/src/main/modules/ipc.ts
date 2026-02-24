@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { getSettings, setSetting, setForegroundColor, setBackgroundColor } from './store'
 import { formatColor, formatForCopy, getColorName, parseColor, hexToColorValue } from './color'
 import { getWCAGContrast, getAPCAContrast } from './accessibility'
-import { getColorPicker } from '../index'
+import { getColorPicker, destroyTray } from '../index'
 
 export const registerIpcHandlers = (): void => {
   log.info('Registering IPC handlers')
@@ -177,7 +177,8 @@ export const registerIpcHandlers = (): void => {
   })
 
   ipcMain.handle('app-quit', () => {
-    app.quit()
+    destroyTray()
+    app.exit(0)
     return true
   })
 
