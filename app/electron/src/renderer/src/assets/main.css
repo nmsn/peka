@@ -631,10 +631,6 @@ body {
     font-size: 9px;
   }
 
-  .color-pair-row {
-    grid-template-columns: 1fr;
-  }
-
   .swap-btn {
     opacity: 1;
     pointer-events: auto;
@@ -647,25 +643,11 @@ body {
     flex: 0 0 var(--footer-height);
   }
 
-  .contrast-footer-layout {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
   .footer-divider {
     height: 1px;
     width: 100%;
   }
 
-  .compliance-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-}
-
-@media (max-width: 350px) {
   .titlebar-format-tab:nth-child(n + 5) {
     display: none;
   }
