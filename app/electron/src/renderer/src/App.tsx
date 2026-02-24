@@ -4,6 +4,7 @@ import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TitleBar } from './components/TitleBar'
 import { AboutModal } from './components/AboutModal'
+import { SettingsModal } from './components/SettingsModal'
 import './assets/main.css'
 
 import type { ReactNode } from 'react'
@@ -18,13 +19,14 @@ declare global {
 }
 
 function App(): ReactNode {
-  const { 
-    loadSettings, 
-    undo, 
-    redo, 
-    swapColors, 
-    setColorFormat, 
+  const {
+    loadSettings,
+    undo,
+    redo,
+    swapColors,
+    setColorFormat,
     setShowPreferences,
+    showPreferences,
     showAbout,
     setShowAbout,
     setForeground,
@@ -32,35 +34,38 @@ function App(): ReactNode {
     setPickerActive
   } = useColorStore()
 
-  const pickColor = useCallback(async (target: 'foreground' | 'background'): Promise<void> => {
-    if (!window.EyeDropper) {
-      console.error('EyeDropper API not supported')
-      return
-    }
+  const pickColor = useCallback(
+    async (target: 'foreground' | 'background'): Promise<void> => {
+      if (!window.EyeDropper) {
+        console.error('EyeDropper API not supported')
+        return
+      }
 
-    setPickerActive(true, target)
-    try {
-      const eyeDropper = new window.EyeDropper()
-      const result = await eyeDropper.open()
-      const color = result.sRGBHex
+      setPickerActive(true, target)
+      try {
+        const eyeDropper = new window.EyeDropper()
+        const result = await eyeDropper.open()
+        const color = result.sRGBHex
 
-      if (color) {
-        if (target === 'foreground') {
-          setForeground(color)
-          await window.api.setForegroundColor(color)
-        } else {
-          setBackground(color)
-          await window.api.setBackgroundColor(color)
+        if (color) {
+          if (target === 'foreground') {
+            setForeground(color)
+            await window.api.setForegroundColor(color)
+          } else {
+            setBackground(color)
+            await window.api.setBackgroundColor(color)
+          }
         }
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Failed to pick color:', error)
+        }
+      } finally {
+        setPickerActive(false)
       }
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        console.error('Failed to pick color:', error)
-      }
-    } finally {
-      setPickerActive(false)
-    }
-  }, [setForeground, setBackground, setPickerActive])
+    },
+    [setForeground, setBackground, setPickerActive]
+  )
 
   useEffect(() => {
     const init = async (): Promise<void> => {
@@ -117,6 +122,7 @@ function App(): ReactNode {
         <AccessibilityPanel />
       </main>
       <AboutModal open={showAbout} onClose={() => setShowAbout(false)} />
+      <SettingsModal open={showPreferences} onClose={() => setShowPreferences(false)} />
     </div>
   )
 }
