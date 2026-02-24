@@ -185,7 +185,7 @@ export const registerIpcHandlers = (): void => {
   log.info('IPC handlers registered')
 }
 
-export const registerShortcuts = (mainWindow: BrowserWindow): void => {
+export const registerShortcuts = (_mainWindow: BrowserWindow): void => {
   log.info('Registering global shortcuts')
   log.info('Global shortcuts registered')
 }

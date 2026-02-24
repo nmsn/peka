@@ -88,23 +88,24 @@ function createTray(): void {
     const trayIcon = nativeImage.createFromPath(icon)
     tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
 
+    const showMainWindow = (): void => {
+      if (!mainWindow || mainWindow.isDestroyed()) {
+        createWindow()
+        return
+      }
+
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      mainWindow.show()
+      mainWindow.focus()
+    }
+
     const contextMenu = Menu.buildFromTemplate([
       {
         label: 'Show Pika',
         click: (): void => {
-          mainWindow?.show()
-        }
-      },
-      {
-        label: 'Pick Foreground Color',
-        click: (): void => {
-          mainWindow?.webContents.send('shortcut:pick-foreground')
-        }
-      },
-      {
-        label: 'Pick Background Color',
-        click: (): void => {
-          mainWindow?.webContents.send('shortcut:pick-background')
+          showMainWindow()
         }
       },
       { type: 'separator' },
@@ -117,14 +118,32 @@ function createTray(): void {
     ])
 
     tray.setToolTip('Pika Color Picker')
-    tray.setContextMenu(contextMenu)
 
-    tray.on('click', () => {
-      if (mainWindow?.isVisible()) {
-        mainWindow.hide()
-      } else {
-        mainWindow?.show()
+    const toggleMainWindow = (): void => {
+      if (!mainWindow || mainWindow.isDestroyed()) {
+        createWindow()
+        return
       }
+
+      if (mainWindow.isVisible()) {
+        mainWindow.hide()
+        return
+      }
+
+      showMainWindow()
+    }
+
+    tray.on('click', (event) => {
+      // macOS: ctrl + left click should behave like right click
+      if (event.ctrlKey) {
+        tray?.popUpContextMenu(contextMenu)
+        return
+      }
+      toggleMainWindow()
+    })
+
+    tray.on('right-click', () => {
+      tray?.popUpContextMenu(contextMenu)
     })
 
     log.info('Tray created')
