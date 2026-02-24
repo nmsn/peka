@@ -748,39 +748,3 @@ body {
   font-size: 12px;
   width: 100%;
 }
-
-@media (max-width: 640px) {
-  .titlebar {
-    padding-left: 72px;
-    min-height: 24px;
-  }
-
-  .titlebar-format-tabs {
-    gap: 2px;
-  }
-
-  .titlebar-format-tab {
-    padding: 2px 5px;
-    font-size: 9px;
-  }
-
-  .swap-btn {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .accessibility-panel {
-    padding: 8px 10px;
-    min-height: var(--footer-height);
-    height: var(--footer-height);
-    flex: 0 0 var(--footer-height);
-  }
-
-  .titlebar-format-tab:nth-child(n + 5) {
-    display: none;
-  }
-
-  .color-input-btn {
-    display: none;
-  }
-}
