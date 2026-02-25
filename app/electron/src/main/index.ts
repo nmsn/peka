@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, Menu, Tray, nativeImage } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import log from 'electron-log'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/logo-palette-square-transparent.png?asset'
 import { registerIpcHandlers, registerShortcuts, unregisterShortcuts } from './modules/ipc'
 import { getSettings } from './modules/store'
 import ScreenColorPicker from './modules/eyedropper'
@@ -86,7 +86,9 @@ function createTray(): void {
 
   try {
     const trayIcon = nativeImage.createFromPath(icon)
-    tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
+    const resizedIcon = trayIcon.resize({ width: 22, height: 22 })
+    resizedIcon.setTemplateImage(true)
+    tray = new Tray(resizedIcon)
 
     const showMainWindow = (): void => {
       if (!mainWindow || mainWindow.isDestroyed()) {
@@ -167,6 +169,11 @@ app.whenReady().then(() => {
   log.info('App ready')
 
   electronApp.setAppUserModelId('com.peka.app')
+
+  if (process.platform === 'darwin') {
+    const dockIcon = nativeImage.createFromPath(icon)
+    app.dock?.setIcon(dockIcon)
+  }
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
