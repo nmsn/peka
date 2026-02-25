@@ -2,7 +2,8 @@ import { app, shell, BrowserWindow, Menu, Tray, nativeImage } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import log from 'electron-log'
-import icon from '../../resources/logo-palette-square-transparent.png?asset'
+import icon from '../../resources/tray.png?asset'
+import dockIcon from '../../resources/icon.png?asset'
 import { registerIpcHandlers, registerShortcuts, unregisterShortcuts } from './modules/ipc'
 import { getSettings } from './modules/store'
 import ScreenColorPicker from './modules/eyedropper'
@@ -171,8 +172,8 @@ app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.peka.app')
 
   if (process.platform === 'darwin') {
-    const dockIcon = nativeImage.createFromPath(icon)
-    app.dock?.setIcon(dockIcon)
+    const dockIconImage = nativeImage.createFromPath(dockIcon)
+    app.dock?.setIcon(dockIconImage)
   }
 
   app.on('browser-window-created', (_, window) => {
