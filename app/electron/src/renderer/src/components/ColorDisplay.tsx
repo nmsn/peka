@@ -3,6 +3,15 @@ import { ArrowRightLeft, Check, Copy, Palette, Pipette } from 'lucide-react'
 import { colornames } from 'color-name-list'
 import { useColorStore } from '../stores/colorStore'
 
+declare global {
+  interface EyeDropper {
+    open: () => Promise<{ sRGBHex: string }>
+  }
+  interface Window {
+    EyeDropper: new () => EyeDropper
+  }
+}
+
 interface ColorNameItem {
   name: string
   hex: string
@@ -128,9 +137,16 @@ export function ColorDisplay(): React.ReactNode {
 
   const handlePickColor = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {
+      if (!window.EyeDropper) {
+        console.error('EyeDropper API not supported')
+        return
+      }
+
       setIsPicking(target)
       try {
-        const color = await window.api.pickColor(target)
+        const eyeDropper = new window.EyeDropper()
+        const result = await eyeDropper.open()
+        const color = result.sRGBHex
 
         if (color) {
           if (target === 'foreground') {

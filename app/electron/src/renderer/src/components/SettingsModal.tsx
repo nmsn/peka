@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Monitor, Moon, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useColorStore } from '../stores/colorStore'
 
 interface SettingsModalProps {
