@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 
 export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
-export type AppMode = 'menubar' | 'regular' | 'hidden'
+export type AppMode = 'menubar' | 'dock'
 export type ContrastStandard = 'wcag' | 'apca'
 
 export interface ColorValue {
@@ -32,8 +32,10 @@ export interface Settings {
   colorFormat: ColorFormat
   copyFormat: CopyFormat
   appMode: AppMode
+  launchAtLogin: boolean
   appFloating: boolean
   hidePikaWhilePicking: boolean
+  hideColorName: boolean
   copyColorOnPick: boolean
   showColorOverlay: boolean
   colorOverlayDuration: number

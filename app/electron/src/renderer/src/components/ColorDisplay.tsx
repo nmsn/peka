@@ -3,15 +3,6 @@ import { ArrowRightLeft, Check, Copy, Palette, Pipette } from 'lucide-react'
 import { colornames } from 'color-name-list'
 import { useColorStore } from '../stores/colorStore'
 
-declare global {
-  interface EyeDropper {
-    open: () => Promise<{ sRGBHex: string }>
-  }
-  interface Window {
-    EyeDropper: new () => EyeDropper
-  }
-}
-
 interface ColorNameItem {
   name: string
   hex: string
@@ -83,6 +74,7 @@ export function ColorDisplay(): React.ReactNode {
     foreground,
     background,
     colorFormat,
+    hideColorName,
     setForeground,
     setBackground,
     swapColors
@@ -136,16 +128,9 @@ export function ColorDisplay(): React.ReactNode {
 
   const handlePickColor = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {
-      if (!window.EyeDropper) {
-        console.error('EyeDropper API not supported')
-        return
-      }
-
       setIsPicking(target)
       try {
-        const eyeDropper = new window.EyeDropper()
-        const result = await eyeDropper.open()
-        const color = result.sRGBHex
+        const color = await window.api.pickColor(target)
 
         if (color) {
           if (target === 'foreground') {
@@ -234,7 +219,7 @@ export function ColorDisplay(): React.ReactNode {
             <div className="color-info">
               <div className="color-meta">
                 <span className="color-value">{formattedForeground || foreground}</span>
-                <span className="color-name">{foregroundName}</span>
+                {!hideColorName && <span className="color-name">{foregroundName}</span>}
               </div>
               <button
                 className={`copy-btn hover-reveal ${copied === 'foreground' ? 'copied' : ''}`}
@@ -299,7 +284,7 @@ export function ColorDisplay(): React.ReactNode {
             <div className="color-info">
               <div className="color-meta">
                 <span className="color-value">{formattedBackground || background}</span>
-                <span className="color-name">{backgroundName}</span>
+                {!hideColorName && <span className="color-name">{backgroundName}</span>}
               </div>
               <button
                 className={`copy-btn hover-reveal ${copied === 'background' ? 'copied' : ''}`}

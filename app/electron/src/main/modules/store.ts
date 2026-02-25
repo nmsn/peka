@@ -3,15 +3,17 @@ import log from 'electron-log'
 
 export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
-export type AppMode = 'menubar' | 'regular' | 'hidden'
+export type AppMode = 'menubar' | 'dock'
 export type ContrastStandard = 'wcag' | 'apca'
 
 interface StoreSchema {
   colorFormat: ColorFormat
   copyFormat: CopyFormat
   appMode: AppMode
+  launchAtLogin: boolean
   appFloating: boolean
   hidePikaWhilePicking: boolean
+  hideColorName: boolean
   copyColorOnPick: boolean
   showColorOverlay: boolean
   colorOverlayDuration: number
@@ -26,8 +28,10 @@ const store = new Store<StoreSchema>({
     colorFormat: 'hex',
     copyFormat: 'css',
     appMode: 'menubar',
+    launchAtLogin: false,
     appFloating: true,
     hidePikaWhilePicking: false,
+    hideColorName: false,
     copyColorOnPick: false,
     showColorOverlay: true,
     colorOverlayDuration: 2.0,
@@ -42,15 +46,19 @@ log.info('Store initialized:', store.path)
 
 export const getSettings = (): StoreSchema => {
   const rawColorFormat = store.get('colorFormat') as string
+  const rawAppMode = store.get('appMode') as string
   const normalizedColorFormat: ColorFormat =
     rawColorFormat === 'opengl' ? 'oklch' : (rawColorFormat as ColorFormat)
+  const normalizedAppMode: AppMode = rawAppMode === 'menubar' ? 'menubar' : 'dock'
 
   return {
     colorFormat: normalizedColorFormat,
     copyFormat: store.get('copyFormat'),
-    appMode: store.get('appMode'),
+    appMode: normalizedAppMode,
+    launchAtLogin: store.get('launchAtLogin'),
     appFloating: store.get('appFloating'),
     hidePikaWhilePicking: store.get('hidePikaWhilePicking'),
+    hideColorName: store.get('hideColorName'),
     copyColorOnPick: store.get('copyColorOnPick'),
     showColorOverlay: store.get('showColorOverlay'),
     colorOverlayDuration: store.get('colorOverlayDuration'),

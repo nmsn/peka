@@ -5,7 +5,7 @@ import log from 'electron-log'
 import icon from '../../resources/tray.png?asset'
 import dockIcon from '../../resources/icon.png?asset'
 import { registerIpcHandlers, registerShortcuts, unregisterShortcuts } from './modules/ipc'
-import { getSettings } from './modules/store'
+import { getSettings, type AppMode } from './modules/store'
 import ScreenColorPicker from './modules/eyedropper'
 
 log.initialize()
@@ -166,6 +166,23 @@ export function destroyTray(): void {
   }
 }
 
+export function applyAppMode(mode: AppMode): void {
+  if (process.platform !== 'darwin') return
+
+  if (mode === 'menubar') {
+    if (!tray) {
+      createTray()
+    }
+    app.dock?.hide()
+    mainWindow?.setSkipTaskbar(true)
+    return
+  }
+
+  destroyTray()
+  app.dock?.show()
+  mainWindow?.setSkipTaskbar(false)
+}
+
 app.whenReady().then(() => {
   log.info('App ready')
 
@@ -182,10 +199,7 @@ app.whenReady().then(() => {
 
   createWindow()
   registerIpcHandlers()
-
-  if (getSettings().appMode === 'menubar') {
-    createTray()
-  }
+  applyAppMode(getSettings().appMode)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

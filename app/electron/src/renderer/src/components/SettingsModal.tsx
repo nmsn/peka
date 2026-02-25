@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Monitor, Moon, Sun, X } from 'lucide-react'
+import { Monitor, Moon, X } from 'lucide-react'
+import { useColorStore } from '../stores/colorStore'
 
 interface SettingsModalProps {
   open: boolean
@@ -8,20 +9,19 @@ interface SettingsModalProps {
 
 interface AppSettings {
   launchAtLogin: boolean
-  hideMenuBarIcon: boolean
   hidePekaWhilePicking: boolean
   hideColorName: boolean
-  appMode: 'menubar' | 'dock' | 'regular'
+  appMode: 'menubar' | 'dock'
 }
 
 export function SettingsModal({ open, onClose }: SettingsModalProps): React.ReactNode {
   const [settings, setSettings] = useState<AppSettings>({
     launchAtLogin: false,
-    hideMenuBarIcon: false,
     hidePekaWhilePicking: false,
     hideColorName: false,
     appMode: 'menubar'
   })
+  const setHideColorName = useColorStore((state) => state.setHideColorName)
 
   useEffect(() => {
     if (!open) return
@@ -30,11 +30,10 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
       try {
         const stored = await window.api.getSettings()
         setSettings({
-          launchAtLogin: (stored as Record<string, unknown>).launchAtLogin as boolean ?? false,
-          hideMenuBarIcon: (stored as Record<string, unknown>).hideMenuBarIcon as boolean ?? false,
+          launchAtLogin: stored.launchAtLogin ?? false,
           hidePekaWhilePicking: stored.hidePikaWhilePicking ?? false,
-          hideColorName: (stored as Record<string, unknown>).hideColorName as boolean ?? false,
-          appMode: (stored as Record<string, unknown>).appMode as 'menubar' | 'dock' | 'regular' ?? 'menubar'
+          hideColorName: stored.hideColorName ?? false,
+          appMode: stored.appMode ?? 'menubar'
         })
       } catch (error) {
         console.error('Failed to load settings:', error)
@@ -44,8 +43,14 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
     void loadSettings()
   }, [open])
 
-  const updateSetting = async <K extends keyof AppSettings>(key: K, value: AppSettings[K]): Promise<void> => {
+  const updateSetting = async <K extends keyof AppSettings>(
+    key: K,
+    value: AppSettings[K]
+  ): Promise<void> => {
     setSettings((prev) => ({ ...prev, [key]: value }))
+    if (key === 'hideColorName') {
+      setHideColorName(Boolean(value))
+    }
     await window.api.setSetting(key, value)
   }
 
@@ -71,14 +76,19 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
       >
         <div className="settings-header">
           <h2>设置</h2>
-          <button type="button" className="settings-close-btn" onClick={onClose} aria-label="Close settings">
+          <button
+            type="button"
+            className="settings-close-btn"
+            onClick={onClose}
+            aria-label="Close settings"
+          >
             <X className="icon-lucide" />
           </button>
         </div>
 
         <div className="settings-body">
           <section className="settings-section">
-            <h3>常规设置</h3>
+            <h3>通用设置</h3>
             <label className="settings-checkbox">
               <input
                 type="checkbox"
@@ -86,14 +96,6 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
                 onChange={(e) => void updateSetting('launchAtLogin', e.target.checked)}
               />
               <span>登录时启动</span>
-            </label>
-            <label className="settings-checkbox">
-              <input
-                type="checkbox"
-                checked={settings.hideMenuBarIcon}
-                onChange={(e) => void updateSetting('hideMenuBarIcon', e.target.checked)}
-              />
-              <span>隐藏菜单栏图标</span>
             </label>
           </section>
 
@@ -120,7 +122,9 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
           <section className="settings-section">
             <h3>应用设置</h3>
             <div className="settings-radio-group">
-              <label className="settings-radio">
+              <label
+                className={`settings-radio ${settings.appMode === 'menubar' ? 'selected' : ''}`}
+              >
                 <input
                   type="radio"
                   name="appMode"
@@ -128,10 +132,9 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
                   checked={settings.appMode === 'menubar'}
                   onChange={() => void updateSetting('appMode', 'menubar')}
                 />
-                <Moon className="icon-lucide" />
                 <span>在菜单栏显示</span>
               </label>
-              <label className="settings-radio">
+              <label className={`settings-radio ${settings.appMode === 'dock' ? 'selected' : ''}`}>
                 <input
                   type="radio"
                   name="appMode"
@@ -139,19 +142,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
                   checked={settings.appMode === 'dock'}
                   onChange={() => void updateSetting('appMode', 'dock')}
                 />
-                <Monitor className="icon-lucide" />
                 <span>在 Dock 栏显示</span>
-              </label>
-              <label className="settings-radio">
-                <input
-                  type="radio"
-                  name="appMode"
-                  value="regular"
-                  checked={settings.appMode === 'regular'}
-                  onChange={() => void updateSetting('appMode', 'regular')}
-                />
-                <Sun className="icon-lucide" />
-                <span>常规窗口</span>
               </label>
             </div>
           </section>

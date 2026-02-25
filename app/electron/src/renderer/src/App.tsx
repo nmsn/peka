@@ -9,15 +9,6 @@ import './assets/main.css'
 
 import type { ReactNode } from 'react'
 
-declare global {
-  interface EyeDropper {
-    open: () => Promise<{ sRGBHex: string }>
-  }
-  interface Window {
-    EyeDropper: new () => EyeDropper
-  }
-}
-
 function App(): ReactNode {
   const {
     loadSettings,
@@ -36,16 +27,9 @@ function App(): ReactNode {
 
   const pickColor = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {
-      if (!window.EyeDropper) {
-        console.error('EyeDropper API not supported')
-        return
-      }
-
       setPickerActive(true, target)
       try {
-        const eyeDropper = new window.EyeDropper()
-        const result = await eyeDropper.open()
-        const color = result.sRGBHex
+        const color = await window.api.pickColor(target)
 
         if (color) {
           if (target === 'foreground') {

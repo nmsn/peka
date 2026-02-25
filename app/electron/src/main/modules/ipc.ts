@@ -6,16 +6,34 @@ import { join } from 'node:path'
 import { getSettings, setSetting, setForegroundColor, setBackgroundColor } from './store'
 import { formatColor, formatForCopy, getColorName, parseColor, hexToColorValue } from './color'
 import { getWCAGContrast, getAPCAContrast } from './accessibility'
-import { getColorPicker, destroyTray } from '../index'
+import { getColorPicker, destroyTray, applyAppMode } from '../index'
 
 export const registerIpcHandlers = (): void => {
   log.info('Registering IPC handlers')
 
   ipcMain.handle('get-settings', () => {
-    return getSettings()
+    const settings = getSettings()
+    return {
+      ...settings,
+      launchAtLogin: app.getLoginItemSettings().openAtLogin
+    }
   })
 
   ipcMain.handle('set-setting', (_event, key: string, value: unknown) => {
+    if (key === 'launchAtLogin') {
+      const openAtLogin = Boolean(value)
+      app.setLoginItemSettings({ openAtLogin })
+      setSetting('launchAtLogin', openAtLogin)
+      return true
+    }
+
+    if (key === 'appMode') {
+      const appMode = value === 'menubar' ? 'menubar' : 'dock'
+      setSetting('appMode', appMode)
+      applyAppMode(appMode)
+      return true
+    }
+
     setSetting(key as keyof ReturnType<typeof getSettings>, value as never)
     return true
   })
