@@ -77,7 +77,7 @@ class ScreenColorPicker {
     this.isActive = true
     const settings = getSettings()
 
-    if (settings.hidePikaWhilePicking && this.mainWindow) {
+    if (settings.hidePekaWhilePicking && this.mainWindow) {
       if (this.mainWindow.isVisible()) {
         this.forceShow = true
       }

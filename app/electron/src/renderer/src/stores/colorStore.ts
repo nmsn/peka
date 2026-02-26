@@ -3,6 +3,8 @@ import type { Settings, ColorFormat, CopyFormat, ContrastResult, APCAResult } fr
 
 const ALL_COLOR_FORMATS: ColorFormat[] = ['hex', 'rgb', 'hsb', 'hsl', 'lab', 'oklch']
 
+export type AppMode = 'menubar' | 'dock'
+
 interface ColorState {
   foreground: string
   background: string
@@ -18,6 +20,9 @@ interface ColorState {
   showPreferences: boolean
   showAbout: boolean
   hideColorName: boolean
+  hidePekaWhilePicking: boolean
+  launchAtLogin: boolean
+  appMode: AppMode
 
   setForeground: (color: string) => void
   setBackground: (color: string) => void
@@ -33,6 +38,9 @@ interface ColorState {
   setShowPreferences: (show: boolean) => void
   setShowAbout: (show: boolean) => void
   setHideColorName: (hide: boolean) => void
+  setHidePekaWhilePicking: (hide: boolean) => void
+  setLaunchAtLogin: (launch: boolean) => void
+  setAppMode: (mode: AppMode) => void
   loadSettings: (settings: Settings) => void
 }
 
@@ -51,6 +59,9 @@ export const useColorStore = create<ColorState>((set, get) => ({
   showPreferences: false,
   showAbout: false,
   hideColorName: false,
+  hidePekaWhilePicking: false,
+  launchAtLogin: false,
+  appMode: 'menubar',
 
   setForeground: (color) => {
     const state = get()
@@ -107,8 +118,7 @@ export const useColorStore = create<ColorState>((set, get) => ({
     if (isVisible) {
       const nextVisible = state.visibleColorFormats.filter((item) => item !== format)
       if (nextVisible.length === 0) return
-      const nextColorFormat =
-        state.colorFormat === format ? nextVisible[0] : state.colorFormat
+      const nextColorFormat = state.colorFormat === format ? nextVisible[0] : state.colorFormat
       set({
         visibleColorFormats: nextVisible,
         colorFormat: nextColorFormat
@@ -124,7 +134,8 @@ export const useColorStore = create<ColorState>((set, get) => ({
   setCopyFormat: (format) => set({ copyFormat: format }),
   setContrastStandard: (standard) => set({ contrastStandard: standard }),
   setContrastResult: (result) => set({ contrastResult: result }),
-  setPickerActive: (active, target) => set({ isPickerActive: active, pickerTarget: target ?? null }),
+  setPickerActive: (active, target) =>
+    set({ isPickerActive: active, pickerTarget: target ?? null }),
 
   undo: () => {
     const state = get()
@@ -155,6 +166,9 @@ export const useColorStore = create<ColorState>((set, get) => ({
   setShowPreferences: (show) => set({ showPreferences: show }),
   setShowAbout: (show) => set({ showAbout: show }),
   setHideColorName: (hide) => set({ hideColorName: hide }),
+  setHidePekaWhilePicking: (hide) => set({ hidePekaWhilePicking: hide }),
+  setLaunchAtLogin: (launch) => set({ launchAtLogin: launch }),
+  setAppMode: (mode) => set({ appMode: mode }),
 
   loadSettings: (settings) => {
     set({
@@ -163,7 +177,10 @@ export const useColorStore = create<ColorState>((set, get) => ({
       colorFormat: settings.colorFormat,
       copyFormat: settings.copyFormat,
       contrastStandard: settings.contrastStandard,
-      hideColorName: settings.hideColorName
+      hideColorName: settings.hideColorName,
+      hidePekaWhilePicking: settings.hidePekaWhilePicking,
+      launchAtLogin: settings.launchAtLogin,
+      appMode: settings.appMode
     })
   }
 }))

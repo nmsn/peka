@@ -34,7 +34,7 @@ export interface Settings {
   appMode: AppMode
   launchAtLogin: boolean
   appFloating: boolean
-  hidePikaWhilePicking: boolean
+  hidePekaWhilePicking: boolean
   hideColorName: boolean
   copyColorOnPick: boolean
   showColorOverlay: boolean
@@ -80,6 +80,8 @@ export interface PikaAPI {
   toggleMaximizeWindow: () => Promise<boolean>
   closeWindow: () => Promise<boolean>
   isWindowMaximized: () => Promise<boolean>
+  hideWindow: () => Promise<boolean>
+  showWindow: () => Promise<boolean>
   onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
   showAbout: () => Promise<boolean>
   getAppInfo: () => Promise<AppInfo>
@@ -153,6 +155,8 @@ const api: PikaAPI = {
   toggleMaximizeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-toggle-maximize'),
   closeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-close'),
   isWindowMaximized: (): Promise<boolean> => ipcRenderer.invoke('window-is-maximized'),
+  hideWindow: (): Promise<boolean> => ipcRenderer.invoke('window-hide'),
+  showWindow: (): Promise<boolean> => ipcRenderer.invoke('window-show'),
   onWindowMaximizedChange: (callback: (maximized: boolean) => void): void => {
     ipcRenderer.on('window:maximized', (_event, maximized) => callback(Boolean(maximized)))
   },

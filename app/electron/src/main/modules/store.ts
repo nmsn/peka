@@ -12,7 +12,7 @@ interface StoreSchema {
   appMode: AppMode
   launchAtLogin: boolean
   appFloating: boolean
-  hidePikaWhilePicking: boolean
+  hidePekaWhilePicking: boolean
   hideColorName: boolean
   copyColorOnPick: boolean
   showColorOverlay: boolean
@@ -30,7 +30,7 @@ const store = new Store<StoreSchema>({
     appMode: 'menubar',
     launchAtLogin: false,
     appFloating: true,
-    hidePikaWhilePicking: false,
+    hidePekaWhilePicking: false,
     hideColorName: false,
     copyColorOnPick: false,
     showColorOverlay: true,
@@ -57,7 +57,7 @@ export const getSettings = (): StoreSchema => {
     appMode: normalizedAppMode,
     launchAtLogin: store.get('launchAtLogin'),
     appFloating: store.get('appFloating'),
-    hidePikaWhilePicking: store.get('hidePikaWhilePicking'),
+    hidePekaWhilePicking: store.get('hidePekaWhilePicking'),
     hideColorName: store.get('hideColorName'),
     copyColorOnPick: store.get('copyColorOnPick'),
     showColorOverlay: store.get('showColorOverlay'),

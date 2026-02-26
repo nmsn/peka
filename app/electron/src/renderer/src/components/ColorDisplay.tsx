@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { ArrowRightLeft, Check, Copy, Palette, Pipette } from 'lucide-react'
 import { colornames } from 'color-name-list'
 import { useColorStore } from '../stores/colorStore'
@@ -54,8 +54,7 @@ const getClosestColorName = (hex: string): string => {
     const listHex = normalizeHex(item.hex)
     if (!listHex) continue
     const rgb = hexToRgb(listHex)
-    const distance =
-      (target.r - rgb.r) ** 2 + (target.g - rgb.g) ** 2 + (target.b - rgb.b) ** 2
+    const distance = (target.r - rgb.r) ** 2 + (target.g - rgb.g) ** 2 + (target.b - rgb.b) ** 2
 
     if (distance < minDistance) {
       minDistance = distance
@@ -84,10 +83,14 @@ export function ColorDisplay(): React.ReactNode {
     background,
     colorFormat,
     hideColorName,
+    hidePekaWhilePicking,
     setForeground,
     setBackground,
     swapColors
   } = useColorStore()
+
+  const hidePekaWhilePickingRef = useRef(hidePekaWhilePicking)
+  hidePekaWhilePickingRef.current = hidePekaWhilePicking
 
   const [formattedForeground, setFormattedForeground] = useState('')
   const [formattedBackground, setFormattedBackground] = useState('')
@@ -113,9 +116,9 @@ export function ColorDisplay(): React.ReactNode {
     const fullHex =
       raw.length === 3
         ? raw
-            .split('')
-            .map((c) => `${c}${c}`)
-            .join('')
+          .split('')
+          .map((c) => `${c}${c}`)
+          .join('')
         : raw
     const r = Number.parseInt(fullHex.slice(0, 2), 16)
     const g = Number.parseInt(fullHex.slice(2, 4), 16)
@@ -143,6 +146,11 @@ export function ColorDisplay(): React.ReactNode {
       }
 
       setIsPicking(target)
+
+      if (hidePekaWhilePickingRef.current) {
+        await window.api.hideWindow()
+      }
+
       try {
         const eyeDropper = new window.EyeDropper()
         const result = await eyeDropper.open()
@@ -163,6 +171,9 @@ export function ColorDisplay(): React.ReactNode {
         }
       } finally {
         setIsPicking(null)
+        if (hidePekaWhilePickingRef.current) {
+          await window.api.showWindow()
+        }
       }
     },
     [setForeground, setBackground]
@@ -320,7 +331,12 @@ export function ColorDisplay(): React.ReactNode {
             </div>
           </div>
         </div>
-        <button className="swap-btn" onClick={swapColors} title="Swap colors (⌘X)" aria-label="Swap colors">
+        <button
+          className="swap-btn"
+          onClick={swapColors}
+          title="Swap colors (⌘X)"
+          aria-label="Swap colors"
+        >
           <ArrowRightLeft className="icon-lucide" />
         </button>
       </div>

@@ -32,7 +32,7 @@ export interface Settings {
   appMode: AppMode
   launchAtLogin: boolean
   appFloating: boolean
-  hidePikaWhilePicking: boolean
+  hidePekaWhilePicking: boolean
   hideColorName: boolean
   copyColorOnPick: boolean
   showColorOverlay: boolean
@@ -78,6 +78,8 @@ export interface PikaAPI {
   toggleMaximizeWindow: () => Promise<boolean>
   closeWindow: () => Promise<boolean>
   isWindowMaximized: () => Promise<boolean>
+  hideWindow: () => Promise<boolean>
+  showWindow: () => Promise<boolean>
   onWindowMaximizedChange: (callback: (maximized: boolean) => void) => void
   showAbout: () => Promise<boolean>
   getAppInfo: () => Promise<AppInfo>

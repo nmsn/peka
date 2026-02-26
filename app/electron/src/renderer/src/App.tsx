@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { useColorStore } from './stores/colorStore'
 import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
@@ -31,8 +31,12 @@ function App(): ReactNode {
     setShowAbout,
     setForeground,
     setBackground,
-    setPickerActive
+    setPickerActive,
+    hidePekaWhilePicking
   } = useColorStore()
+
+  const hidePekaWhilePickingRef = useRef(hidePekaWhilePicking)
+  hidePekaWhilePickingRef.current = hidePekaWhilePicking
 
   const pickColor = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {
@@ -42,6 +46,11 @@ function App(): ReactNode {
       }
 
       setPickerActive(true, target)
+
+      if (hidePekaWhilePickingRef.current) {
+        await window.api.hideWindow()
+      }
+
       try {
         const eyeDropper = new window.EyeDropper()
         const result = await eyeDropper.open()
@@ -62,6 +71,9 @@ function App(): ReactNode {
         }
       } finally {
         setPickerActive(false)
+        if (hidePekaWhilePickingRef.current) {
+          await window.api.showWindow()
+        }
       }
     },
     [setForeground, setBackground, setPickerActive]

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { X } from 'lucide-react'
 import { useColorStore } from '../stores/colorStore'
 
@@ -7,21 +7,17 @@ interface SettingsModalProps {
   onClose: () => void
 }
 
-interface AppSettings {
-  launchAtLogin: boolean
-  hidePekaWhilePicking: boolean
-  hideColorName: boolean
-  appMode: 'menubar' | 'dock'
-}
-
 export function SettingsModal({ open, onClose }: SettingsModalProps): React.ReactNode {
-  const [settings, setSettings] = useState<AppSettings>({
-    launchAtLogin: false,
-    hidePekaWhilePicking: false,
-    hideColorName: false,
-    appMode: 'menubar'
-  })
-  const setHideColorName = useColorStore((state) => state.setHideColorName)
+  const {
+    launchAtLogin,
+    hidePekaWhilePicking,
+    hideColorName,
+    appMode,
+    setLaunchAtLogin,
+    setHidePekaWhilePicking,
+    setHideColorName,
+    setAppMode
+  } = useColorStore()
 
   useEffect(() => {
     if (!open) return
@@ -29,27 +25,27 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
     const loadSettings = async (): Promise<void> => {
       try {
         const stored = await window.api.getSettings()
-        setSettings({
-          launchAtLogin: stored.launchAtLogin ?? false,
-          hidePekaWhilePicking: stored.hidePikaWhilePicking ?? false,
-          hideColorName: stored.hideColorName ?? false,
-          appMode: stored.appMode ?? 'menubar'
-        })
+        setLaunchAtLogin(stored.launchAtLogin ?? false)
+        setHidePekaWhilePicking(stored.hidePekaWhilePicking ?? false)
+        setHideColorName(stored.hideColorName ?? false)
+        setAppMode(stored.appMode ?? 'menubar')
       } catch (error) {
         console.error('Failed to load settings:', error)
       }
     }
 
     void loadSettings()
-  }, [open])
+  }, [open, setLaunchAtLogin, setHidePekaWhilePicking, setHideColorName, setAppMode])
 
-  const updateSetting = async <K extends keyof AppSettings>(
-    key: K,
-    value: AppSettings[K]
-  ): Promise<void> => {
-    setSettings((prev) => ({ ...prev, [key]: value }))
-    if (key === 'hideColorName') {
+  const updateSetting = async (key: string, value: unknown): Promise<void> => {
+    if (key === 'launchAtLogin') {
+      setLaunchAtLogin(Boolean(value))
+    } else if (key === 'hidePekaWhilePicking') {
+      setHidePekaWhilePicking(Boolean(value))
+    } else if (key === 'hideColorName') {
       setHideColorName(Boolean(value))
+    } else if (key === 'appMode') {
+      setAppMode(value as 'menubar' | 'dock')
     }
     await window.api.setSetting(key, value)
   }
@@ -92,7 +88,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
             <label className="settings-checkbox">
               <input
                 type="checkbox"
-                checked={settings.launchAtLogin}
+                checked={launchAtLogin}
                 onChange={(e) => void updateSetting('launchAtLogin', e.target.checked)}
               />
               <span>登录时启动</span>
@@ -104,7 +100,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
             <label className="settings-checkbox">
               <input
                 type="checkbox"
-                checked={settings.hidePekaWhilePicking}
+                checked={hidePekaWhilePicking}
                 onChange={(e) => void updateSetting('hidePekaWhilePicking', e.target.checked)}
               />
               <span>选择颜色时隐藏 Peka</span>
@@ -112,7 +108,7 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
             <label className="settings-checkbox">
               <input
                 type="checkbox"
-                checked={settings.hideColorName}
+                checked={hideColorName}
                 onChange={(e) => void updateSetting('hideColorName', e.target.checked)}
               />
               <span>隐藏颜色名称</span>
@@ -122,24 +118,22 @@ export function SettingsModal({ open, onClose }: SettingsModalProps): React.Reac
           <section className="settings-section">
             <h3>应用设置</h3>
             <div className="settings-radio-group">
-              <label
-                className={`settings-radio ${settings.appMode === 'menubar' ? 'selected' : ''}`}
-              >
+              <label className={`settings-radio ${appMode === 'menubar' ? 'selected' : ''}`}>
                 <input
                   type="radio"
                   name="appMode"
                   value="menubar"
-                  checked={settings.appMode === 'menubar'}
+                  checked={appMode === 'menubar'}
                   onChange={() => void updateSetting('appMode', 'menubar')}
                 />
                 <span>在菜单栏显示</span>
               </label>
-              <label className={`settings-radio ${settings.appMode === 'dock' ? 'selected' : ''}`}>
+              <label className={`settings-radio ${appMode === 'dock' ? 'selected' : ''}`}>
                 <input
                   type="radio"
                   name="appMode"
                   value="dock"
-                  checked={settings.appMode === 'dock'}
+                  checked={appMode === 'dock'}
                   onChange={() => void updateSetting('appMode', 'dock')}
                 />
                 <span>在 Dock 栏显示</span>

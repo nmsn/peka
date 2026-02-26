@@ -159,6 +159,19 @@ export const registerIpcHandlers = (): void => {
     return window?.isMaximized() ?? false
   })
 
+  ipcMain.handle('window-hide', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    window?.hide()
+    return true
+  })
+
+  ipcMain.handle('window-show', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    window?.show()
+    window?.focus()
+    return true
+  })
+
   ipcMain.handle('app-show-about', () => {
     app.showAboutPanel()
     return true
