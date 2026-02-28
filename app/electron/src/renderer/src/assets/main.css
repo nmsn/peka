@@ -354,6 +354,43 @@ body {
   cursor: pointer;
 }
 
+.settings-language {
+  margin-top: 8px;
+}
+
+.settings-label {
+  display: block;
+  font-size: 13px;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.language-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.language-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.language-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.language-btn.active {
+  border-color: var(--color-accent);
+  background: rgba(122, 162, 255, 0.14);
+}
+
 .settings-shortcut {
   display: flex;
   align-items: center;
@@ -536,9 +573,7 @@ body {
   white-space: nowrap;
 }
 
-.color-name.oklch {
-  font-size: var(--text-xxs);
-}
+
 
 .color-value {
   display: block;
@@ -549,6 +584,10 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.color-value.oklch {
+  font-size: var(--text-sm);
 }
 
 .copy-btn {

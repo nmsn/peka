@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ArrowRightLeft } from 'lucide-react'
 import { useColorStore } from '../stores/colorStore'
 import { ColorTile } from './ColorTile'
@@ -14,6 +15,7 @@ declare global {
 }
 
 export function ColorDisplay(): React.ReactNode {
+  const { t } = useTranslation()
   const {
     foreground,
     background,
@@ -157,8 +159,8 @@ export function ColorDisplay(): React.ReactNode {
         <button
           className="swap-btn"
           onClick={swapColors}
-          title="Swap colors (⌘X)"
-          aria-label="Swap colors"
+          title={`${t('color.swapColors')} (⌘X)`}
+          aria-label={t('color.swapColors')}
         >
           <ArrowRightLeft className="icon-lucide" />
         </button>

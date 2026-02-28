@@ -1,0 +1,51 @@
+{
+  "translation": {
+    "settings": {
+      "title": "设置",
+      "close": "关闭设置",
+      "general": "通用设置",
+      "launchAtLogin": "登录时启动",
+      "picker": "选择设置",
+      "hidePekaWhilePicking": "选择颜色时隐藏 Peka",
+      "hideColorName": "隐藏颜色名称",
+      "app": "应用设置",
+      "showInMenubar": "在菜单栏显示",
+      "showInDock": "在 Dock 栏显示",
+      "language": "语言",
+      "languageDesc": "界面语言"
+    },
+    "about": {
+      "title": "关于",
+      "version": "版本",
+      "close": "关闭"
+    },
+    "color": {
+      "foreground": "前景色",
+      "background": "背景色",
+      "pickColor": "取色",
+      "colorPicker": "颜色选择器",
+      "copy": "复制",
+      "swapColors": "交换颜色",
+      "pickForeground": "选取前景色",
+      "pickBackground": "选取背景色",
+      "openForegroundPicker": "打开前景色选择器",
+      "openBackgroundPicker": "打开背景色选择器",
+      "copyForeground": "复制前景色",
+      "copyBackground": "复制背景色"
+    },
+    "accessibility": {
+      "contrastRatio": "对比度",
+      "wcagCompliance": "WCAG 合规性",
+      "apcaCompliance": "APCA 合规性",
+      "calculating": "计算中...",
+      "noResult": "无结果",
+      "baseline": "基线 30+",
+      "headline": "标题 45+",
+      "title": "大标题 60+",
+      "body": "正文 75+"
+    },
+    "common": {
+      "unknown": "未知"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { AppInfo } from '../types'
 
@@ -8,6 +9,7 @@ interface AboutModalProps {
 }
 
 export function AboutModal({ open, onClose }: AboutModalProps): React.ReactNode {
+  const { t } = useTranslation()
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
 
   useEffect(() => {
@@ -46,13 +48,15 @@ export function AboutModal({ open, onClose }: AboutModalProps): React.ReactNode 
         aria-label="About this app"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="about-header">关于</div>
+        <div className="about-header">{t('about.title')}</div>
         <div className="about-body">
           <div className="about-name">Peka</div>
-          <div className="about-version">版本 {appInfo?.version ?? '...'}</div>
+          <div className="about-version">
+            {t('about.version')} {appInfo?.version ?? '...'}
+          </div>
         </div>
         <button type="button" className="about-close-btn" onClick={onClose}>
-          关闭
+          {t('about.close')}
         </button>
       </div>
     </div>

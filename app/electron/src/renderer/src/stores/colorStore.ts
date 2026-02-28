@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { Settings, ColorFormat, CopyFormat, ContrastResult, APCAResult } from '../types'
+import type { LanguageCode } from '../i18n'
 
 const ALL_COLOR_FORMATS: ColorFormat[] = ['hex', 'rgb', 'hsb', 'hsl', 'lab', 'oklch']
 
@@ -23,6 +24,7 @@ interface ColorState {
   hidePekaWhilePicking: boolean
   launchAtLogin: boolean
   appMode: AppMode
+  language: LanguageCode
 
   setForeground: (color: string) => void
   setBackground: (color: string) => void
@@ -41,6 +43,7 @@ interface ColorState {
   setHidePekaWhilePicking: (hide: boolean) => void
   setLaunchAtLogin: (launch: boolean) => void
   setAppMode: (mode: AppMode) => void
+  setLanguage: (language: LanguageCode) => void
   loadSettings: (settings: Settings) => void
 }
 
@@ -62,6 +65,7 @@ export const useColorStore = create<ColorState>((set, get) => ({
   hidePekaWhilePicking: false,
   launchAtLogin: false,
   appMode: 'menubar',
+  language: 'en',
 
   setForeground: (color) => {
     const state = get()
@@ -169,6 +173,7 @@ export const useColorStore = create<ColorState>((set, get) => ({
   setHidePekaWhilePicking: (hide) => set({ hidePekaWhilePicking: hide }),
   setLaunchAtLogin: (launch) => set({ launchAtLogin: launch }),
   setAppMode: (mode) => set({ appMode: mode }),
+  setLanguage: (language) => set({ language }),
 
   loadSettings: (settings) => {
     set({
@@ -180,7 +185,8 @@ export const useColorStore = create<ColorState>((set, get) => ({
       hideColorName: settings.hideColorName,
       hidePekaWhilePicking: settings.hidePekaWhilePicking,
       launchAtLogin: settings.launchAtLogin,
-      appMode: settings.appMode
+      appMode: settings.appMode,
+      language: (settings as Settings & { language?: LanguageCode }).language ?? 'en'
     })
   }
 }))

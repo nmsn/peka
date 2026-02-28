@@ -1,0 +1,51 @@
+{
+  "translation": {
+    "settings": {
+      "title": "Settings",
+      "close": "Close settings",
+      "general": "General Settings",
+      "launchAtLogin": "Launch at Login",
+      "picker": "Picker Settings",
+      "hidePekaWhilePicking": "Hide Peka while picking",
+      "hideColorName": "Hide color name",
+      "app": "App Settings",
+      "showInMenubar": "Show in Menu Bar",
+      "showInDock": "Show in Dock",
+      "language": "Language",
+      "languageDesc": "Interface language"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version",
+      "close": "Close"
+    },
+    "color": {
+      "foreground": "Foreground",
+      "background": "Background",
+      "pickColor": "Pick color",
+      "colorPicker": "Color picker",
+      "copy": "Copy",
+      "swapColors": "Swap colors",
+      "pickForeground": "Pick foreground color",
+      "pickBackground": "Pick background color",
+      "openForegroundPicker": "Open foreground color picker",
+      "openBackgroundPicker": "Open background color picker",
+      "copyForeground": "Copy foreground color",
+      "copyBackground": "Copy background color"
+    },
+    "accessibility": {
+      "contrastRatio": "Contrast Ratio",
+      "wcagCompliance": "WCAG Compliance",
+      "apcaCompliance": "APCA Compliance",
+      "calculating": "Calculating...",
+      "noResult": "No result",
+      "baseline": "Baseline 30+",
+      "headline": "Headline 45+",
+      "title": "Title 60+",
+      "body": "Body 75+"
+    },
+    "common": {
+      "unknown": "Unknown"
+    }
+  }
+}

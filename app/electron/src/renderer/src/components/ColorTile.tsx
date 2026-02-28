@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Check, Copy, Palette, Pipette } from 'lucide-react'
 import { getReadableTextColor } from '../utils/colorUtils'
 
@@ -32,6 +33,10 @@ export function ColorTile({
   onCopy,
   onPickInput
 }: ColorTileProps): React.ReactNode {
+  const { t } = useTranslation()
+
+  const labelKey = label.toLowerCase() as 'foreground' | 'background'
+
   return (
     <div
       className="color-section color-tile"
@@ -48,7 +53,7 @@ export function ColorTile({
     >
       <div className="color-tile-overlay">
         <div className="color-header">
-          <span className="color-label">{label}</span>
+          <span className="color-label">{t(`color.${labelKey}`)}</span>
           <div className="color-actions">
             <button
               className={`pick-btn hover-reveal ${isPicking ? 'picking' : ''}`}
@@ -56,8 +61,8 @@ export function ColorTile({
                 e.stopPropagation()
                 onPick()
               }}
-              title={`Pick color (${pickShortcut})`}
-              aria-label={`Pick ${label.toLowerCase()} color`}
+              title={`${t('color.pickColor')} (${pickShortcut})`}
+              aria-label={t(`color.pick${label === 'Foreground' ? 'Foreground' : 'Background'}`)}
             >
               <Pipette className="icon-lucide" />
             </button>
@@ -67,8 +72,10 @@ export function ColorTile({
                 e.stopPropagation()
                 onPickInput()
               }}
-              title="Color picker"
-              aria-label={`Open ${label.toLowerCase()} color picker`}
+              title={t('color.colorPicker')}
+              aria-label={t(
+                `color.open${label === 'Foreground' ? 'Foreground' : 'Background'}Picker`
+              )}
             >
               <Palette className="icon-lucide" />
             </button>
@@ -76,12 +83,10 @@ export function ColorTile({
         </div>
         <div className="color-info">
           <div className="color-meta">
-            <span className="color-value">{formattedColor || color}</span>
-            {!hideColorName && (
-              <span className={`color-name ${colorFormat === 'oklch' ? 'oklch' : ''}`}>
-                {colorName}
-              </span>
-            )}
+            <span className={`color-value ${colorFormat === 'oklch' ? 'oklch' : ''}`}>
+              {formattedColor || color}
+            </span>
+            {!hideColorName && <span className="color-name">{colorName}</span>}
           </div>
           <button
             className={`copy-btn hover-reveal ${copied ? 'copied' : ''}`}
@@ -89,8 +94,8 @@ export function ColorTile({
               e.stopPropagation()
               onCopy()
             }}
-            title={`Copy (${copyShortcut})`}
-            aria-label={`Copy ${label.toLowerCase()} color`}
+            title={`${t('color.copy')} (${copyShortcut})`}
+            aria-label={t(`color.copy${label === 'Foreground' ? 'Foreground' : 'Background'}`)}
           >
             {copied ? <Check className="icon-lucide" /> : <Copy className="icon-lucide" />}
           </button>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useColorStore } from '../stores/colorStore'
 import type { ContrastResult, APCAResult } from '../types'
 
@@ -30,6 +31,7 @@ const isAPCAResult = (value: unknown): value is APCAResult => {
 }
 
 export function AccessibilityPanel(): ReactNode {
+  const { t } = useTranslation()
   const { foreground, background, contrastStandard, contrastResult, setContrastResult, setContrastStandard } =
     useColorStore()
 
@@ -77,7 +79,7 @@ export function AccessibilityPanel(): ReactNode {
   const renderWCAG = (result: ContrastResult): ReactNode => (
     <>
       <div className="ratio-block">
-        <span className="contrast-caption">Contrast Ratio</span>
+        <span className="contrast-caption">{t('accessibility.contrastRatio')}</span>
         <div className="contrast-ratio-value">
           <span className="ratio-main">{result.ratio.toFixed(2)}</span>
           <span className="ratio-separator">:</span>
@@ -87,7 +89,7 @@ export function AccessibilityPanel(): ReactNode {
       <div className="footer-divider" />
       <div className="compliance-block">
         <div className="compliance-header">
-          <span className="contrast-caption">WCAG Compliance</span>
+          <span className="contrast-caption">{t('accessibility.wcagCompliance')}</span>
           <div className="standard-toggle">
             <button
               className={contrastStandard === 'wcag' ? 'active' : ''}
@@ -118,7 +120,7 @@ export function AccessibilityPanel(): ReactNode {
     return (
       <>
         <div className="ratio-block">
-          <span className="contrast-caption">Lightness Contrast</span>
+          <span className="contrast-caption">{t('accessibility.contrastRatio')}</span>
           <div className="contrast-ratio-value">
             <span className="ratio-main">{lc.toFixed(0)}</span>
             <span className="ratio-separator">Lc</span>
@@ -127,7 +129,7 @@ export function AccessibilityPanel(): ReactNode {
         <div className="footer-divider" />
         <div className="compliance-block">
           <div className="compliance-header">
-            <span className="contrast-caption">APCA Compliance</span>
+            <span className="contrast-caption">{t('accessibility.apcaCompliance')}</span>
             <div className="standard-toggle">
               <button
                 className={contrastStandard === 'wcag' ? 'active' : ''}
@@ -144,10 +146,10 @@ export function AccessibilityPanel(): ReactNode {
             </div>
           </div>
           <div className="compliance-group">
-            {renderComplianceToggle('Baseline 30+', lc >= 30)}
-            {renderComplianceToggle('Headline 45+', lc >= 45)}
-            {renderComplianceToggle('Title 60+', lc >= 60)}
-            {renderComplianceToggle('Body 75+', lc >= 75)}
+            {renderComplianceToggle(t('accessibility.baseline'), lc >= 30)}
+            {renderComplianceToggle(t('accessibility.headline'), lc >= 45)}
+            {renderComplianceToggle(t('accessibility.title'), lc >= 60)}
+            {renderComplianceToggle(t('accessibility.body'), lc >= 75)}
           </div>
         </div>
       </>
@@ -157,7 +159,7 @@ export function AccessibilityPanel(): ReactNode {
   return (
     <div className="accessibility-panel">
       {loading ? (
-        <div className="loading">Calculating...</div>
+        <div className="loading">{t('accessibility.calculating')}</div>
       ) : contrastResult && contrastStandard === 'wcag' && isWCAGResult(contrastResult) ? (
         <div className="contrast-footer-layout">
           {renderWCAG(contrastResult)}
@@ -167,7 +169,7 @@ export function AccessibilityPanel(): ReactNode {
           {renderAPCA(contrastResult)}
         </div>
       ) : (
-        <div className="no-result">No result</div>
+        <div className="no-result">{t('accessibility.noResult')}</div>
       )}
     </div>
   )
