@@ -26,6 +26,7 @@ function createWindow(): void {
     maxWidth: 800,
     maxHeight: 400,
     show: false,
+    backgroundColor: '#1e1e1e',
     frame: false,
     title: 'Peka',
     titleBarStyle: 'hidden',
