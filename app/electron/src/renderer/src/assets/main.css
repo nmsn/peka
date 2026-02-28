@@ -15,7 +15,7 @@
   --text-md: 13px;
   --text-sm: 12px;
   --text-xs: 11px;
-  --text-xxs: 10px;
+  --text-xxs: 8px;
   --space-xs: 2px;
   --space-sm: 6px;
   --space-md: 10px;
@@ -527,13 +527,17 @@ body {
 
 .color-name {
   display: block;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 500;
   line-height: 1.2;
   opacity: 0.86;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.color-name.oklch {
+  font-size: var(--text-xxs);
 }
 
 .color-value {
