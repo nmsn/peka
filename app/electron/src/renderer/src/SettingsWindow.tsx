@@ -68,7 +68,12 @@ export function SettingsWindow(): React.ReactNode {
     return (
       <div className="settings-window">
         <div className="settings-content">
-          <div className="loading">Loading...</div>
+          <div className="settings-header">
+            <h2>{t('settings.title')}</h2>
+          </div>
+          <div className="settings-body">
+            <div className="loading">Loading...</div>
+          </div>
         </div>
       </div>
     )

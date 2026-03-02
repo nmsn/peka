@@ -250,6 +250,17 @@ body {
   background: #1e1e1e;
   display: flex;
   flex-direction: column;
+  -webkit-app-region: drag;
+}
+
+.settings-window .settings-close-btn,
+.settings-window .settings-checkbox,
+.settings-window .settings-radio,
+.settings-window .language-btn,
+.settings-window input,
+.settings-window .settings-section h3,
+.settings-window .settings-label {
+  -webkit-app-region: no-drag;
 }
 
 .settings-content {
