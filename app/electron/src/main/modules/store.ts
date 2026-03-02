@@ -5,6 +5,7 @@ export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
 export type AppMode = 'menubar' | 'dock'
 export type ContrastStandard = 'wcag' | 'apca'
+export type LanguageCode = 'en' | 'zh'
 
 interface StoreSchema {
   colorFormat: ColorFormat
@@ -21,6 +22,7 @@ interface StoreSchema {
   colorSpace: string
   foregroundColor: string
   backgroundColor: string
+  language: LanguageCode
 }
 
 const store = new Store<StoreSchema>({
@@ -38,7 +40,8 @@ const store = new Store<StoreSchema>({
     contrastStandard: 'wcag',
     colorSpace: 'srgb',
     foregroundColor: '#000000',
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    language: 'en'
   }
 })
 
@@ -65,7 +68,8 @@ export const getSettings = (): StoreSchema => {
     contrastStandard: store.get('contrastStandard'),
     colorSpace: store.get('colorSpace'),
     foregroundColor: store.get('foregroundColor'),
-    backgroundColor: store.get('backgroundColor')
+    backgroundColor: store.get('backgroundColor'),
+    language: store.get('language')
   }
 }
 

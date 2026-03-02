@@ -2,6 +2,7 @@ export type ColorFormat = 'hex' | 'rgb' | 'hsb' | 'hsl' | 'lab' | 'oklch'
 export type CopyFormat = 'css' | 'design' | 'swiftui' | 'unformatted'
 export type AppMode = 'menubar' | 'dock'
 export type ContrastStandard = 'wcag' | 'apca'
+export type LanguageCode = 'en' | 'zh'
 
 export interface ColorValue {
   hex: string
@@ -41,6 +42,7 @@ export interface Settings {
   colorSpace: string
   foregroundColor: string
   backgroundColor: string
+  language: LanguageCode
 }
 
 export interface AppInfo {

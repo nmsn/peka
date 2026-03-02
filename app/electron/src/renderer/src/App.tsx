@@ -4,6 +4,7 @@ import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TitleBar } from './components/TitleBar'
 import { AboutModal } from './components/AboutModal'
+import i18n from './i18n'
 import './assets/main.css'
 
 import type { ReactNode } from 'react'
@@ -29,11 +30,16 @@ function App(): ReactNode {
     setForeground,
     setBackground,
     setPickerActive,
-    hidePekaWhilePicking
+    hidePekaWhilePicking,
+    language
   } = useColorStore()
 
   const hidePekaWhilePickingRef = useRef(hidePekaWhilePicking)
   hidePekaWhilePickingRef.current = hidePekaWhilePicking
+
+  useEffect(() => {
+    i18n.changeLanguage(language)
+  }, [language])
 
   const pickColor = useCallback(
     async (target: 'foreground' | 'background'): Promise<void> => {

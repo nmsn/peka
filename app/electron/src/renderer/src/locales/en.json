@@ -14,6 +14,16 @@
       "language": "Language",
       "languageDesc": "Interface language"
     },
+    "menu": {
+      "colorType": "Color Type",
+      "settings": "Settings",
+      "about": "About",
+      "checkUpdates": "Check for Updates",
+      "copyAllAsJSON": "Copy All as JSON",
+      "copyAllAsText": "Copy All as Text",
+      "exit": "Exit",
+      "openMenu": "Open menu"
+    },
     "about": {
       "title": "About",
       "version": "Version",

@@ -14,6 +14,16 @@
       "language": "语言",
       "languageDesc": "界面语言"
     },
+    "menu": {
+      "colorType": "颜色类型",
+      "settings": "设置",
+      "about": "关于",
+      "checkUpdates": "检查更新",
+      "copyAllAsJSON": "复制全部为 JSON",
+      "copyAllAsText": "复制全部为文本",
+      "exit": "退出",
+      "openMenu": "打开菜单"
+    },
     "about": {
       "title": "关于",
       "version": "版本",

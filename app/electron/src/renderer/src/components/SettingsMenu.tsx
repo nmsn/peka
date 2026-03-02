@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useColorStore } from '../stores/colorStore'
 import {
   Check,
@@ -13,13 +14,13 @@ import {
 } from 'lucide-react'
 import type { ColorFormat } from '../types'
 
-const TITLEBAR_FORMATS: { value: ColorFormat; label: string }[] = [
-  { value: 'hex', label: 'HEX' },
-  { value: 'rgb', label: 'RGB' },
-  { value: 'hsb', label: 'HSB' },
-  { value: 'hsl', label: 'HSL' },
-  { value: 'lab', label: 'LAB' },
-  { value: 'oklch', label: 'OKLCH' }
+const TITLEBAR_FORMATS: { value: ColorFormat; labelKey: string }[] = [
+  { value: 'hex', labelKey: 'HEX' },
+  { value: 'rgb', labelKey: 'RGB' },
+  { value: 'hsb', labelKey: 'HSB' },
+  { value: 'hsl', labelKey: 'HSL' },
+  { value: 'lab', labelKey: 'LAB' },
+  { value: 'oklch', labelKey: 'OKLCH' }
 ]
 
 interface SettingsMenuProps {
@@ -28,6 +29,7 @@ interface SettingsMenuProps {
 }
 
 export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps): React.ReactNode {
+  const { t } = useTranslation()
   const { visibleColorFormats, foreground, background, toggleVisibleColorFormat } = useColorStore()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isFormatMenuOpen, setIsFormatMenuOpen] = useState(false)
@@ -91,8 +93,8 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
       <button
         className="titlebar-settings-icon"
         onClick={() => setIsMenuOpen((prev) => !prev)}
-        title="Open menu"
-        aria-label="Open menu"
+        title={t('menu.openMenu')}
+        aria-label={t('menu.openMenu')}
         aria-haspopup="menu"
         aria-expanded={isMenuOpen}
       >
@@ -108,7 +110,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
               onClick={() => setIsFormatMenuOpen((prev) => !prev)}
             >
               <Palette className="icon-lucide" />
-              <span>颜色类型</span>
+              <span>{t('menu.colorType')}</span>
               <ChevronRight className="icon-lucide settings-chevron" />
             </button>
             {isFormatMenuOpen ? (
@@ -127,7 +129,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
                       <span className="settings-check">
                         {checked ? <Check className="icon-lucide" /> : null}
                       </span>
-                      <span>{format.label}</span>
+                      <span>{format.labelKey}</span>
                     </button>
                   )
                 })}
@@ -144,7 +146,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
             }}
           >
             <Settings className="icon-lucide" />
-            <span>设置</span>
+            <span>{t('menu.settings')}</span>
           </button>
           <button
             type="button"
@@ -156,7 +158,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
             }}
           >
             <Info className="icon-lucide" />
-            <span>关于</span>
+            <span>{t('menu.about')}</span>
           </button>
           <button
             type="button"
@@ -168,7 +170,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
             }}
           >
             <RefreshCcw className="icon-lucide" />
-            <span>检查更新</span>
+            <span>{t('menu.checkUpdates')}</span>
           </button>
           <button
             type="button"
@@ -179,7 +181,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
             }}
           >
             <ClipboardCopy className="icon-lucide" />
-            <span>复制全部为 JSON</span>
+            <span>{t('menu.copyAllAsJSON')}</span>
           </button>
           <button
             type="button"
@@ -190,7 +192,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
             }}
           >
             <FileText className="icon-lucide" />
-            <span>复制全部为文本</span>
+            <span>{t('menu.copyAllAsText')}</span>
           </button>
           <button
             type="button"
@@ -202,7 +204,7 @@ export function SettingsMenu({ onOpenSettings, onOpenAbout }: SettingsMenuProps)
             }}
           >
             <LogOut className="icon-lucide" />
-            <span>退出</span>
+            <span>{t('menu.exit')}</span>
           </button>
         </div>
       ) : null}
