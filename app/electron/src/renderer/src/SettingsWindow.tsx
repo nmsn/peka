@@ -5,6 +5,11 @@ import { useColorStore } from './stores/colorStore'
 import { supportedLanguages, type LanguageCode } from './i18n'
 import i18n from './i18n'
 
+const appModeOptions = [
+  { mode: 'menubar' as const, labelKey: 'settings.showInMenubar' },
+  { mode: 'dock' as const, labelKey: 'settings.showInDock' }
+]
+
 export function SettingsWindow(): React.ReactNode {
   const { t } = useTranslation()
   const {
@@ -144,27 +149,17 @@ export function SettingsWindow(): React.ReactNode {
 
           <section className="settings-section">
             <h3>{t('settings.app')}</h3>
-            <div className="settings-radio-group">
-              <label className={`settings-radio ${appMode === 'menubar' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name="appMode"
-                  value="menubar"
-                  checked={appMode === 'menubar'}
-                  onChange={() => void updateSetting('appMode', 'menubar')}
-                />
-                <span>{t('settings.showInMenubar')}</span>
-              </label>
-              <label className={`settings-radio ${appMode === 'dock' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name="appMode"
-                  value="dock"
-                  checked={appMode === 'dock'}
-                  onChange={() => void updateSetting('appMode', 'dock')}
-                />
-                <span>{t('settings.showInDock')}</span>
-              </label>
+            <div className="app-mode-buttons">
+              {appModeOptions.map((option) => (
+                <button
+                  key={option.mode}
+                  type="button"
+                  className={`language-btn ${appMode === option.mode ? 'active' : ''}`}
+                  onClick={() => void updateSetting('appMode', option.mode)}
+                >
+                  {t(option.labelKey)}
+                </button>
+              ))}
             </div>
           </section>
         </div>
