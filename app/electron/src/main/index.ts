@@ -270,3 +270,15 @@ process.on('uncaughtException', (error) => {
 process.on('unhandledRejection', (reason) => {
   log.error('Unhandled rejection:', reason)
 })
+
+if (is.dev) {
+  process.on('SIGINT', () => {
+    log.info('Received SIGINT, quitting app...')
+    app.quit()
+  })
+
+  process.on('SIGTERM', () => {
+    log.info('Received SIGTERM, quitting app...')
+    app.quit()
+  })
+}
