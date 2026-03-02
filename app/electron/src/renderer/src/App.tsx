@@ -122,6 +122,10 @@ function App(): ReactNode {
     window.api.onPreferences(() => {
       handleOpenSettings()
     })
+
+    window.api.onSettingsChanged((settings) => {
+      loadSettings(settings)
+    })
   }, [loadSettings, undo, redo, swapColors, setColorFormat, pickColor, handleOpenSettings])
 
   return (

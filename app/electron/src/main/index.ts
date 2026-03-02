@@ -194,6 +194,10 @@ export function getColorPicker(): ScreenColorPicker | null {
   return colorPicker
 }
 
+export function getMainWindow(): BrowserWindow | null {
+  return mainWindow
+}
+
 export function destroyTray(): void {
   if (tray) {
     tray.destroy()

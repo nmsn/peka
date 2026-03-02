@@ -6,7 +6,14 @@ import { join } from 'node:path'
 import { getSettings, setSetting, setForegroundColor, setBackgroundColor } from './store'
 import { formatColor, formatForCopy, getColorName, parseColor, hexToColorValue } from './color'
 import { getWCAGContrast, getAPCAContrast } from './accessibility'
-import { getColorPicker, destroyTray, applyAppMode, createSettingsWindow } from '../index'
+import { getColorPicker, destroyTray, applyAppMode, createSettingsWindow, getMainWindow } from '../index'
+
+function notifySettingsChanged(): void {
+  const mainWindow = getMainWindow()
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('settings-changed', getSettings())
+  }
+}
 
 export const registerIpcHandlers = (): void => {
   log.info('Registering IPC handlers')
@@ -24,6 +31,7 @@ export const registerIpcHandlers = (): void => {
       const openAtLogin = Boolean(value)
       app.setLoginItemSettings({ openAtLogin })
       setSetting('launchAtLogin', openAtLogin)
+      notifySettingsChanged()
       return true
     }
 
@@ -31,10 +39,12 @@ export const registerIpcHandlers = (): void => {
       const appMode = value === 'menubar' ? 'menubar' : 'dock'
       setSetting('appMode', appMode)
       applyAppMode(appMode)
+      notifySettingsChanged()
       return true
     }
 
     setSetting(key as keyof ReturnType<typeof getSettings>, value as never)
+    notifySettingsChanged()
     return true
   })
 

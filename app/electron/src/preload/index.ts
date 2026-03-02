@@ -76,6 +76,7 @@ export interface PikaAPI {
   onUndo: (callback: () => void) => void
   onRedo: (callback: () => void) => void
   onPreferences: (callback: () => void) => void
+  onSettingsChanged: (callback: (settings: Settings) => void) => void
   minimizeWindow: () => Promise<boolean>
   toggleMaximizeWindow: () => Promise<boolean>
   closeWindow: () => Promise<boolean>
@@ -151,6 +152,9 @@ const api: PikaAPI = {
   },
   onPreferences: (callback: () => void): void => {
     ipcRenderer.on('shortcut:preferences', callback)
+  },
+  onSettingsChanged: (callback: (settings: Settings) => void): void => {
+    ipcRenderer.on('settings-changed', (_event, settings) => callback(settings as Settings))
   },
   minimizeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-minimize'),
   toggleMaximizeWindow: (): Promise<boolean> => ipcRenderer.invoke('window-toggle-maximize'),
