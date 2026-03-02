@@ -12,6 +12,7 @@ log.initialize()
 log.info('Application starting...')
 
 let mainWindow: BrowserWindow | null = null
+let settingsWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let colorPicker: ScreenColorPicker | null = null
 
@@ -81,6 +82,39 @@ function createWindow(): void {
 
   registerShortcuts(mainWindow)
   colorPicker = new ScreenColorPicker(mainWindow)
+}
+
+export function createSettingsWindow(): void {
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    settingsWindow.focus()
+    return
+  }
+
+  settingsWindow = new BrowserWindow({
+    width: 500,
+    height: 500,
+    resizable: false,
+    frame: false,
+    title: 'Settings - Peka',
+    backgroundColor: '#1e1e1e',
+    alwaysOnTop: true,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+      contextIsolation: true,
+      nodeIntegration: false
+    }
+  })
+
+  settingsWindow.on('closed', () => {
+    settingsWindow = null
+  })
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    settingsWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/settings.html`)
+  } else {
+    settingsWindow.loadFile(join(__dirname, '../renderer/settings.html'))
+  }
 }
 
 function createTray(): void {

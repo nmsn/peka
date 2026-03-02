@@ -85,6 +85,7 @@ export interface PikaAPI {
   getAppInfo: () => Promise<AppInfo>
   checkForUpdates: () => Promise<boolean>
   quitApp: () => Promise<boolean>
+  openSettingsWindow: () => Promise<boolean>
 }
 
 declare global {

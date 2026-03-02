@@ -4,7 +4,6 @@ import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TitleBar } from './components/TitleBar'
 import { AboutModal } from './components/AboutModal'
-import { SettingsModal } from './components/SettingsModal'
 import './assets/main.css'
 
 import type { ReactNode } from 'react'
@@ -25,8 +24,6 @@ function App(): ReactNode {
     redo,
     swapColors,
     setColorFormat,
-    setShowPreferences,
-    showPreferences,
     showAbout,
     setShowAbout,
     setForeground,
@@ -79,6 +76,10 @@ function App(): ReactNode {
     [setForeground, setBackground, setPickerActive]
   )
 
+  const handleOpenSettings = useCallback((): void => {
+    void window.api.openSettingsWindow()
+  }, [])
+
   useEffect(() => {
     const init = async (): Promise<void> => {
       const settings = await window.api.getSettings()
@@ -119,14 +120,14 @@ function App(): ReactNode {
     })
 
     window.api.onPreferences(() => {
-      setShowPreferences(true)
+      handleOpenSettings()
     })
-  }, [loadSettings, undo, redo, swapColors, setColorFormat, setShowPreferences, pickColor])
+  }, [loadSettings, undo, redo, swapColors, setColorFormat, pickColor, handleOpenSettings])
 
   return (
     <div className="app">
       <TitleBar
-        onOpenSettings={() => setShowPreferences(true)}
+        onOpenSettings={handleOpenSettings}
         onOpenAbout={() => setShowAbout(true)}
       />
       <main className="app-main">
@@ -134,7 +135,6 @@ function App(): ReactNode {
         <AccessibilityPanel />
       </main>
       <AboutModal open={showAbout} onClose={() => setShowAbout(false)} />
-      <SettingsModal open={showPreferences} onClose={() => setShowPreferences(false)} />
     </div>
   )
 }

@@ -87,6 +87,7 @@ export interface PikaAPI {
   getAppInfo: () => Promise<AppInfo>
   checkForUpdates: () => Promise<boolean>
   quitApp: () => Promise<boolean>
+  openSettingsWindow: () => Promise<boolean>
 }
 
 declare global {
@@ -163,7 +164,8 @@ const api: PikaAPI = {
   showAbout: (): Promise<boolean> => ipcRenderer.invoke('app-show-about'),
   getAppInfo: (): Promise<AppInfo> => ipcRenderer.invoke('app-get-info'),
   checkForUpdates: (): Promise<boolean> => ipcRenderer.invoke('app-check-for-updates'),
-  quitApp: (): Promise<boolean> => ipcRenderer.invoke('app-quit')
+  quitApp: (): Promise<boolean> => ipcRenderer.invoke('app-quit'),
+  openSettingsWindow: (): Promise<boolean> => ipcRenderer.invoke('open-settings-window')
 }
 
 if (process.contextIsolated) {

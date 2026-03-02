@@ -233,8 +233,7 @@ body {
 }
 
 .settings-modal {
-  width: 360px;
-  max-height: 80vh;
+  width: 400px;
   border-radius: 12px;
   border: 1px solid var(--color-divider);
   background: rgba(28, 28, 30, 0.96);
@@ -243,6 +242,20 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.settings-window {
+  width: 100vw;
+  height: 100vh;
+  background: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .settings-header {
