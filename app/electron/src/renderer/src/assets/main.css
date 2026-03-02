@@ -36,6 +36,8 @@ body {
   background-color: #1e1e1e;
   color: var(--color-primary);
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 #root {
