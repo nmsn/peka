@@ -92,7 +92,7 @@ export function createSettingsWindow(): void {
 
   settingsWindow = new BrowserWindow({
     width: 500,
-    height: 500,
+    height: 420,
     resizable: false,
     frame: false,
     title: 'Settings - Peka',
