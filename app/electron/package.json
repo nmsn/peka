@@ -1,6 +1,6 @@
 {
   "name": "@peka/electron",
-  "version": "1.0.0",
+  "version": "0.1.0-alpha.1",
   "description": "Pika - A color picker for macOS, built with Electron",
   "main": "./out/main/index.js",
   "author": "example.com",
