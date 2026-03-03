@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "pnpm --filter @peka/electron dev",
     "build": "pnpm --filter @peka/electron build",
-    "start": "pnpm --filter @peka/electron start"
+    "start": "pnpm --filter @peka/electron start",
+    "build:mac": "pnpm --filter @peka/electron build:mac",
+    "build:win": "pnpm --filter @peka/electron build:win"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
