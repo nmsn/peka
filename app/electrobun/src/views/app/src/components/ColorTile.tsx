@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Check, Copy, Palette, Pipette } from 'lucide-react'
-import { getReadableTextColor } from '../utils/colorUtils'
+import { getReadableTextColor } from '../../../shared/colorUtils'
 
 interface ColorTileProps {
   label: string

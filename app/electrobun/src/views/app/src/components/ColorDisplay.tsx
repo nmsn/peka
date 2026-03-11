@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowRightLeft } from 'lucide-react'
-import { useColorStore } from '../stores/colorStore'
+import { useColorStore } from '../../../shared/colorStore'
 import { ColorTile } from './ColorTile'
-import { getClosestColorName, normalizeDisplayValue } from '../utils/colorUtils'
+import { getClosestColorName, normalizeDisplayValue } from '../../../shared/colorUtils'
 
 export function ColorDisplay(): React.ReactNode {
   const { t } = useTranslation()
@@ -57,6 +57,9 @@ export function ColorDisplay(): React.ReactNode {
 
       if (hidePekaWhilePickingRef.current) {
         await window.api.hideWindow()
+        // Wait for macOS to complete window minimization and focus change
+        // before launching the Swift color picker helper
+        await new Promise((resolve) => setTimeout(resolve, 150))
       }
 
       try {

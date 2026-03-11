@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { AppInfo } from '../types'
+import type { AppInfo } from '../../../shared/types'
 
 interface AboutModalProps {
   open: boolean

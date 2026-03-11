@@ -1,6 +1,6 @@
-import { useColorStore } from '../stores/colorStore'
+import { useColorStore } from '../../../shared/colorStore'
 import { SettingsMenu } from './SettingsMenu'
-import type { ColorFormat } from '../types'
+import type { ColorFormat } from '../../../shared/types'
 
 interface TitleBarProps {
   onOpenSettings: () => void

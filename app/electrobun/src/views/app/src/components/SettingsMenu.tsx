@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorStore } from '../stores/colorStore'
+import { useColorStore } from '../../../shared/colorStore'
 import {
   Check,
   ChevronRight,
@@ -12,7 +12,7 @@ import {
   RefreshCcw,
   Settings
 } from 'lucide-react'
-import type { ColorFormat } from '../types'
+import type { ColorFormat } from '../../../shared/types'
 
 const TITLEBAR_FORMATS: { value: ColorFormat; labelKey: string }[] = [
   { value: 'hex', labelKey: 'HEX' },

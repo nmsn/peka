@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
-import { useColorStore } from './stores/colorStore'
-import { supportedLanguages, type LanguageCode } from './i18n'
-import i18n from './i18n'
+import { useColorStore } from '../../shared/colorStore'
+import { supportedLanguages, type LanguageCode } from '../../shared/i18n'
+import i18n from '../../shared/i18n'
 
 const appModeOptions = [
   { mode: 'menubar' as const, labelKey: 'settings.showInMenubar' },

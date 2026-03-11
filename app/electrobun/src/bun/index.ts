@@ -688,14 +688,7 @@ const handleColorPick = async (kind: 'foreground' | 'background'): Promise<strin
       } else {
         setBackgroundColor(hexResult)
       }
-
-      if (settings.showColorOverlay) {
-        try {
-          await showColorOverlay(hexResult, settings.colorFormat, result?.cursor)
-        } catch (overlayError) {
-          console.warn('Failed to show color overlay:', overlayError)
-        }
-      }
+      sendToView('settingsChanged', getSettingsSnapshot())
 
       if (settings.copyColorOnPick) {
         try {

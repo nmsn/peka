@@ -1,6 +1,5 @@
 import './assets/main.css'
-import './assets/base.css'
-import './i18n'
+import '../../shared/i18n'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'

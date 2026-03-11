@@ -1,10 +1,10 @@
 import { useEffect, useCallback, useRef } from 'react'
-import { useColorStore } from './stores/colorStore'
+import { useColorStore } from '../../shared/colorStore'
 import { ColorDisplay } from './components/ColorDisplay'
 import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TitleBar } from './components/TitleBar'
 import { AboutModal } from './components/AboutModal'
-import i18n from './i18n'
+import i18n from '../../shared/i18n'
 import './assets/main.css'
 import './assets/base.css'
 
@@ -42,6 +42,9 @@ function App(): ReactNode {
 
       if (hidePekaWhilePickingRef.current) {
         await window.api.hideWindow()
+        // Wait for macOS to complete window minimization and focus change
+        // before launching the Swift color picker helper
+        await new Promise((resolve) => setTimeout(resolve, 150))
       }
 
       try {

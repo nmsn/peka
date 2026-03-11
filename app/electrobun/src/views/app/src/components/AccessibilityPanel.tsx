@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useColorStore } from '../stores/colorStore'
-import type { ContrastResult, APCAResult } from '../types'
+import { useColorStore } from '../../../shared/colorStore'
+import type { ContrastResult, APCAResult } from '../../../shared/types'
 
 import type { ReactNode } from 'react'
 

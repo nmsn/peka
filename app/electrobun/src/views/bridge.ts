@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Electroview } from 'electrobun/view'
-import type { PikaAPI } from '../shared/types'
+import type { PikaAPI } from './shared/api'
 import type { PekaRPCSchema } from '../shared/rpc'
 import type { Settings, ColorFormat, CopyFormat, ColorValue, ContrastResult, APCAResult, AppInfo } from '../shared/types'
 
