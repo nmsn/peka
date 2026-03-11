@@ -8,7 +8,11 @@
     "build": "pnpm --filter @peka/electron build",
     "start": "pnpm --filter @peka/electron start",
     "build:mac": "pnpm --filter @peka/electron build:mac",
-    "build:win": "pnpm --filter @peka/electron build:win"
+    "build:win": "pnpm --filter @peka/electron build:win",
+    "electrobun:dev": "pnpm --dir app/electrobun dev",
+    "electrobun:dev:auto-pick": "pnpm --dir app/electrobun dev:auto-pick",
+    "electrobun:typecheck": "pnpm --dir app/electrobun typecheck",
+    "electrobun:test:color-pick": "pnpm --dir app/electrobun test:color-pick"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
