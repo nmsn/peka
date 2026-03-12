@@ -146,7 +146,14 @@ export function ColorDisplay(): React.ReactNode {
 
         <button
           className="swap-btn"
-          onClick={swapColors}
+          onClick={async () => {
+            const currentForeground = foreground
+            const currentBackground = background
+            swapColors()
+            // Persist swapped colors to backend
+            await window.api.setForegroundColor(currentBackground)
+            await window.api.setBackgroundColor(currentForeground)
+          }}
           title={`${t('color.swapColors')} (⌘X)`}
           aria-label={t('color.swapColors')}
         >

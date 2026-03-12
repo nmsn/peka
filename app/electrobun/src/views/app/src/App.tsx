@@ -109,8 +109,12 @@ function App(): ReactNode {
       void handleCopy('background')
     })
 
-    window.api.onSwap(() => {
+    window.api.onSwap(async () => {
+      const state = useColorStore.getState()
       swapColors()
+      // Persist swapped colors to backend
+      await window.api.setForegroundColor(state.background)
+      await window.api.setBackgroundColor(state.foreground)
     })
 
     window.api.onUndo(() => {
