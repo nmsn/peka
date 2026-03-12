@@ -11,7 +11,7 @@ import type {
 } from '../shared/contracts'
 
 class ElectrobunWindowAdapter implements RuntimeWindow {
-  constructor(private readonly window: BrowserWindow<RPCWithTransport>) {}
+  constructor(private readonly window: BrowserWindow<RPCWithTransport>) { }
 
   get id(): number {
     return this.window.id
@@ -55,7 +55,7 @@ class ElectrobunWindowAdapter implements RuntimeWindow {
 }
 
 class ElectrobunTrayAdapter implements RuntimeTray {
-  constructor(private readonly tray: Tray) {}
+  constructor(private readonly tray: Tray) { }
 
   setTooltip(text: string): void {
     this.tray.setTitle(text)
@@ -74,8 +74,10 @@ export class VerifiedElectrobunAdapter implements ElectrobunRuntimeAdapter {
   async createWindow(options: RuntimeWindowOptions & { rpc?: RPCWithTransport }): Promise<RuntimeWindow> {
     const window = new BrowserWindow({
       title: options.title,
+      titleBarStyle: "hiddenInset",  // 使用 hiddenInset 而非 default
+      transparent: true,
       frame: {
-        x: 80,
+        x: 300,
         y: 80,
         width: options.width,
         height: options.height
@@ -85,8 +87,6 @@ export class VerifiedElectrobunAdapter implements ElectrobunRuntimeAdapter {
       preload: null,
       renderer: 'native',
       rpc: options.rpc,
-      titleBarStyle: options.frameless ? 'hidden' : 'default',
-      transparent: false,
       sandbox: false,
       styleMask: options.styleMask
     })
@@ -101,6 +101,7 @@ export class VerifiedElectrobunAdapter implements ElectrobunRuntimeAdapter {
   async createTray(_iconPath: string): Promise<RuntimeTray> {
     const tray = new Tray({ title: '', template: true })
     if (_iconPath) {
+      // @ts-ignore - setImage exists at runtime
       tray.setImage(_iconPath)
     }
     return new ElectrobunTrayAdapter(tray)

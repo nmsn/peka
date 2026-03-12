@@ -21,31 +21,9 @@ export function TitleBar({ onOpenSettings, onOpenAbout }: TitleBarProps): React.
   const isMac = navigator.platform.toLowerCase().includes('mac')
 
   return (
-    <header className="titlebar">
-      {isMac ? (
-        <div className="titlebar-traffic" aria-label="Window controls">
-          <button
-            type="button"
-            className="traffic-btn traffic-close"
-            aria-label="Close window"
-            onClick={() => void window.api.closeWindow()}
-          />
-          <button
-            type="button"
-            className="traffic-btn traffic-minimize"
-            aria-label="Minimize window"
-            onClick={() => void window.api.minimizeWindow()}
-          />
-          <button
-            type="button"
-            className="traffic-btn traffic-maximize"
-            aria-label="Toggle maximize window"
-            onClick={() => void window.api.toggleMaximizeWindow()}
-          />
-        </div>
-      ) : null}
+    <header className="titlebar electrobun-webkit-app-region-drag">
       <div className="titlebar-drag" />
-      <div className="titlebar-actions">
+      <div className="titlebar-actions electrobun-webkit-app-region-no-drag">
         <div className="titlebar-format-tabs" aria-label="Color format">
           {TITLEBAR_FORMATS.filter((format) => visibleColorFormats.includes(format.value)).map(
             (format) => (

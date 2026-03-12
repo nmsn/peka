@@ -755,7 +755,7 @@ const createMainWindow = async (): Promise<BrowserWindow<RPCWithTransport>> => {
     title: 'Peka',
     width: 620,
     height: 300,
-    frameless: true,
+    frameless: false,
     url: 'views://app/index.html',
     rpc,
     alwaysOnTop: settings.appFloating
