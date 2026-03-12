@@ -5,8 +5,6 @@ import { AccessibilityPanel } from './components/AccessibilityPanel'
 import { TitleBar } from './components/TitleBar'
 import { AboutModal } from './components/AboutModal'
 import i18n from '../../shared/i18n'
-import './assets/main.css'
-import './assets/base.css'
 
 import type { ReactNode } from 'react'
 

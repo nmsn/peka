@@ -8,6 +8,8 @@
     "dev": "electrobun dev --watch",
     "dev:auto-pick": "PEKA_AUTO_PICK=foreground electrobun dev --watch",
     "build": "electrobun build",
+    "build:canary": "electrobun build --env=canary",
+    "build:stable": "electrobun build --env=stable",
     "run": "electrobun run",
     "test:color-pick": "bun run src/bun/test-color-picker.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"

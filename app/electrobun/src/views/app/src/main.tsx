@@ -1,4 +1,3 @@
-import './assets/main.css'
 import '../../shared/i18n'
 
 import { StrictMode } from 'react'
