@@ -23,11 +23,9 @@ const config: ElectrobunConfig = {
       'src/native/macos/color-picker.swift': 'native/macos/color-picker.swift',
       'resources/tray.png': 'resources/tray.png',
       'src/views/app/index.html': 'views/app/index.html',
-      'src/views/app/base.css': 'views/app/base.css',
-      'src/views/app/main.css': 'views/app/main.css',
+      'src/views/app/styles.css': 'views/app/styles.css',
       'src/views/settings/index.html': 'views/settings/index.html',
-      'src/views/settings/base.css': 'views/settings/base.css',
-      'src/views/settings/main.css': 'views/settings/main.css',
+      'src/views/settings/styles.css': 'views/settings/styles.css',
       'src/views/shared/assets/electron.svg': 'views/shared/assets/electron.svg',
       'src/views/shared/assets/wavy-lines.svg': 'views/shared/assets/wavy-lines.svg'
     },
